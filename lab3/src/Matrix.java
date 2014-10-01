@@ -13,5 +13,40 @@ public class Matrix {
                 matrix[i][j] = filledDigit;
     }
 
+    public static Matrix Multiply(Matrix m1, Matrix m2){
+        Matrix rezult = new Matrix(m1.getSize());
+        int tempValue = 0;
+        for (int i = 0; i < rezult.getSize(); i++)
+            for (int j = 0; j < rezult.getSize(); j++) {
+                tempValue = 0;
+                for (int k = 0; k < rezult.getSize(); k++)
+                    tempValue += m1.getElement(j,k) * m2.getElement(k,j);
+                rezult.setElement(i,j,tempValue);
+            }
+        return rezult;
+    }
+
+    public static Vector Multiply(Matrix matrix, Vector vector){
+        Vector rezult = new Vector(vector.getSize());
+        int tempValue = 0;
+        for(int i = 0; i < rezult.getSize(); i++){
+            tempValue = 0;
+            for (int j = 0; j < rezult.getSize(); j++)
+                tempValue += vector.getElement(i) * matrix.getElement(j,i);
+            rezult.setElement(i,tempValue);
+        }
+        return rezult;
+    }
+
+    public int getSize(){
+        return matrix.length;
+    }
+
+    public int getElement(int line, int column){
+        return matrix[line][column];
+    }
+    public void setElement(int line, int column, int value){
+        matrix[line][column] = value;
+    }
 
 }
