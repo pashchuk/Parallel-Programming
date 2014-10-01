@@ -18,5 +18,6 @@
 !/Lab1,2/*.ada
 
 # Idea Project file
-/lab3/*
-!/lab3/src/**
+*.iml
+*.idea
+/lab3/out/**
