@@ -1,5 +1,19 @@
 # Object file
 *.o
+*.obj
 
 # Ada Library Information
 *.ali
+*.PRJ
+*.lib
+*.pdb
+*.lsa
+*.asm
+*.rsp
+*.map
+*.exe
+*.rl
+*.exe
+/Lab1,2/*
+!/Lab1,2/*.ada
+
