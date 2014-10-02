@@ -12,9 +12,20 @@
  */
 
 public class Main {
-    public static int size = 10;
+    public static int size = 2000;
     public static int fillNumber = 1;
-    public static void main(String[] args){
-
+    public static void main(String[] args) throws InterruptedException {
+        Thread t1 = new Thread(new F1());
+        Thread t2 = new Thread(new F2());
+        Thread t3 = new F3();
+        t1.setPriority(3);
+        t2.setPriority(3);
+        t3.setPriority(3);
+        t1.start();
+        t2.start();
+        t3.start();
+        t1.join();
+        t2.join();
+        t3.join();
     }
 }

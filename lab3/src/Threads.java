@@ -20,6 +20,11 @@ class F1 implements Runnable {
         MA.Generate(Main.fillNumber);
         System.out.println("generating matrix MZ ...");
         MZ.Generate(Main.fillNumber);
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         System.out.println("Calculating F1 ...");
         int d = Vector.Multiply(B,C) + Vector.Multiply(A,B) +
                 Vector.Multiply(C,Vector.Multiply(Matrix.Multiply(MA,MZ),B));
@@ -37,6 +42,11 @@ class F2 implements Runnable {
         MA.Generate(Main.fillNumber);
         System.out.println("generating matrix MB ...");
         MB.Generate(Main.fillNumber);
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         System.out.println("Calculating F2 ...");
         Matrix MC = Matrix.Multiply(MA.Transpose(),MB).Sort();
         System.out.println("Task2 finished");
@@ -60,8 +70,7 @@ class F2 implements Runnable {
          System.out.println("generating matrix MM ...");
          MM.Generate(Main.fillNumber);
          System.out.println("Calculating F3 ...");
-         Vector D = Vector.Multiply(Matrix.Multiply(MC,MM).Transpose(), Vector.Plus(A,M).Sort());
+         Vector D = Vector.Multiply(Matrix.Multiply(MC, MM).Transpose(), Vector.Plus(A, M).Sort());
          System.out.println("Task3 finished");
-
      }
  }
