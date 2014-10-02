@@ -38,6 +38,14 @@ public class Matrix {
         return rezult;
     }
 
+    public static Matrix Plus(Matrix m1, Matrix m2){
+        Matrix rezult = new Matrix(m1.getSize());
+        for (int i = 0; i < m1.getSize(); i++)
+            for (int j = 0; j < m1.getSize(); j++)
+                rezult.setElement(i,j,m1.getElement(i,j) + m2.getElement(i,j));
+        return rezult;
+    }
+
     public int getSize(){
         return matrix.length;
     }
