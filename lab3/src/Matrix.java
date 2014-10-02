@@ -1,3 +1,6 @@
+import java.util.Arrays;
+import java.util.Collections;
+
 /**
  * Created by mamaxropela on 01.10.14.
  */
@@ -7,6 +10,7 @@ public class Matrix {
     public Matrix(int size){
         matrix = new int[size][size];
     }
+
     public void Generate(int filledDigit){
         for (int i = 0; i < matrix.length; i++)
             for(int j = 0; j < matrix.length; j++)
@@ -44,6 +48,18 @@ public class Matrix {
             for (int j = 0; j < m1.getSize(); j++)
                 rezult.setElement(i,j,m1.getElement(i,j) + m2.getElement(i,j));
         return rezult;
+    }
+
+    public Matrix Sort(){
+        Integer[] tempArr = new Integer[matrix.length];
+        for (int i = 0; i < matrix.length; i++){
+            for (int j = 0; j < matrix.length; j++)
+                tempArr[j] = matrix[i][j];
+            Arrays.sort(tempArr,Collections.reverseOrder());
+            for(int j = 0; j < matrix.length; j++)
+                matrix[i][j] = tempArr[j];
+        }
+        return this;
     }
 
     public int getSize(){

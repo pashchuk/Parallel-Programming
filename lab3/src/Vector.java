@@ -1,3 +1,6 @@
+import java.util.Arrays;
+import java.util.Collections;
+
 /**
  * Created by mamaxropela on 01.10.14.
  */
@@ -15,6 +18,7 @@ public class Vector {
     public int getElement(int index){
         return vector[index];
     }
+
     public void setElement(int index, int value){
         vector[index] = value;
     }
@@ -43,6 +47,11 @@ public class Vector {
         for (int i = 0; i < v1.getSize(); i++)
             rezult.setElement(i,v1.getElement(i) + v2.getElement(i));
         return rezult;
+    }
+
+    public Vector Sort(){
+        Arrays.sort(vector);
+        return this;
     }
 
     public int getSize(){
