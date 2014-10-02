@@ -28,6 +28,11 @@ class F1 implements Runnable {
         System.out.println("Calculating F1 ...");
         int d = Vector.Multiply(B,C) + Vector.Multiply(A,B) +
                 Vector.Multiply(C,Vector.Multiply(Matrix.Multiply(MA,MZ),B));
+        if(Main.PrintMode) {
+            System.out.printf("d = %d",d);
+            System.out.println();
+            System.out.println();
+        }
         System.out.println("Task1 finished");
     }
 }
@@ -49,6 +54,11 @@ class F2 implements Runnable {
         }
         System.out.println("Calculating F2 ...");
         Matrix MC = Matrix.Multiply(MA.Transpose(),MB).Sort();
+        if(Main.PrintMode) {
+            System.out.printf("MC = ");
+            System.out.println();
+            MC.Print();
+        }
         System.out.println("Task2 finished");
     }
 }
@@ -71,6 +81,11 @@ class F2 implements Runnable {
          MM.Generate(Main.fillNumber);
          System.out.println("Calculating F3 ...");
          Vector D = Vector.Multiply(Matrix.Multiply(MC, MM).Transpose(), Vector.Plus(A, M).Sort());
+         if(Main.PrintMode) {
+             System.out.printf("D = ");
+             System.out.println();
+             D.Print();
+         }
          System.out.println("Task3 finished");
      }
  }

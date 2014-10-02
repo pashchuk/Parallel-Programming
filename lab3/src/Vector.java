@@ -35,6 +35,12 @@ public class Vector {
         return rezult;
     }
 
+    public void Print(){
+        for(int i = 0; i < vector.length; i++)
+            System.out.printf("%6d  ",vector[i]);
+        System.out.println();
+    }
+
     public static int Multiply(Vector v1, Vector v2){
         int rezult = 0;
         for (int i = 0; i < v1.getSize(); i++)

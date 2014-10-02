@@ -12,8 +12,9 @@
  */
 
 public class Main {
-    public static int size = 2000;
-    public static int fillNumber = 1;
+    public static final int size = 2000;
+    public static final int fillNumber = 1;
+    public static final boolean PrintMode = true;
     public static void main(String[] args) throws InterruptedException {
         Thread t1 = new Thread(new F1());
         Thread t2 = new Thread(new F2());
