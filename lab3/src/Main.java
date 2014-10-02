@@ -12,14 +12,14 @@
  */
 
 public class Main {
-    public static final int size = 2000;
-    public static final int fillNumber = 1;
+    public static final int size = 10, fillNumber = 1,
+                            stackSize = 1000000;
     public static final boolean PrintMode = true;
     public static Object printSynchronization = new Object();
     public static void main(String[] args) throws InterruptedException {
-        Thread t1 = new Thread(new F1());
-        Thread t2 = new Thread(new F2());
-        Thread t3 = new F3();
+        Thread t1 = new Thread(null, new F1(), "Task1", stackSize);
+        Thread t2 = new Thread(null, new F2(), "Task2", stackSize);
+        Thread t3 = new Thread(null, new F3(), "Task3", stackSize);
         t1.setPriority(3);
         t2.setPriority(3);
         t3.setPriority(3);
