@@ -46,6 +46,22 @@ class F2 implements Runnable {
      @Override
      public void run() {
          super.run();
+         System.out.println("Task3 started");
+         Vector A = new Vector(Main.size),
+                 M = new Vector(Main.size);
+         Matrix MC = new Matrix(Main.size),
+                 MM = new Matrix(Main.size);
+         System.out.println("generating vector A ...");
+         A.Generate(Main.fillNumber);
+         System.out.println("generating vector M ...");
+         M.Generate(Main.fillNumber);
+         System.out.println("generating matrix MC ...");
+         MC.Generate(Main.fillNumber);
+         System.out.println("generating matrix MM ...");
+         MM.Generate(Main.fillNumber);
+         System.out.println("Calculating F3 ...");
+         Vector D = Vector.Multiply(Matrix.Multiply(MC,MM).Transpose(), Vector.Plus(A,M).Sort());
+         System.out.println("Task3 finished");
 
      }
  }
