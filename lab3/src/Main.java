@@ -12,8 +12,9 @@
  */
 
 public class Main {
+    public static int size = 10;
+    public static int fillNumber = 1;
+    public static void main(String[] args){
 
-    public static void main(String[] args) {
-        System.out.println("Hello World!");
     }
 }
