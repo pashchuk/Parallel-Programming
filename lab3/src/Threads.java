@@ -30,7 +30,16 @@ class F1 implements Runnable {
 class F2 implements Runnable {
     @Override
     public void run() {
-
+        System.out.println("Task2 started");
+        Matrix MA = new Matrix(Main.size),
+                MB = new Matrix(Main.size);
+        System.out.println("generating matrix MA ...");
+        MA.Generate(Main.fillNumber);
+        System.out.println("generating matrix MB ...");
+        MB.Generate(Main.fillNumber);
+        System.out.println("Calculating F2 ...");
+        Matrix MC = Matrix.Multiply(MA.Transpose(),MB).Sort();
+        System.out.println("Task2 finished");
     }
 }
  class F3 extends Thread {
