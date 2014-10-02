@@ -62,6 +62,14 @@ public class Matrix {
         return this;
     }
 
+    public Matrix Transpose(){
+        Matrix rezult = new Matrix(matrix.length);
+        for (int i = 0; i < matrix.length; i++)
+            for(int j = 0; j < matrix.length; j++)
+                rezult.setElement(i,j,matrix[j][i]);
+        return rezult;
+    }
+
     public int getSize(){
         return matrix.length;
     }
