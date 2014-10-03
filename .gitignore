@@ -28,6 +28,8 @@
 *.manifest
 *.csproj
 *.config
+*.sln
+*.suo
 
 #folders
 /lab4/lab4/bin/**
