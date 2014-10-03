@@ -101,7 +101,7 @@ namespace lab4
             for (int i = 0; i < Size; i++)
             {
                 for (int j = 0; j < Size; j++)
-                    Console.Write("{0,6d}  ", matrix[i, j]);
+                    Console.Write("{0,4:D}  ", matrix[i, j]);
                 Console.WriteLine();
             }
         }
