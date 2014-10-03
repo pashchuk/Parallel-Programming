@@ -91,9 +91,11 @@ namespace lab4
             int[] temparray = new int[Size];
             for (int i = 0; i < Size; i++)
             {
-                Array.Copy(matrix, Size*i, temparray, 0, Size);
+                for (int j = 0; j < Size; j++)
+                    temparray[j] = matrix[i, j];
                 temparray = temparray.OrderByDescending(c => c).ToArray();
-                Array.Copy(temparray, 0, matrix, Size*i, Size);
+                for (int j = 0; j < Size; j++)
+                    matrix[i, j] = temparray[j];
             }
             return this;
         }
