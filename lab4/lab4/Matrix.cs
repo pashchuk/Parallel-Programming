@@ -76,16 +76,17 @@ namespace lab4
             this.matrix[line, column] = value;
         }
 
-        public void Transpose()
+        public Matrix Transpose()
         {
             int[,] rezult = new int[Size,Size];
             for (int i = 0; i < Size; i++)
                 for (int j = 0; j < Size; j++)
                     rezult[i, j] = matrix[j, i];
             matrix = rezult;
+            return this;
         }
 
-        public void Sort()
+        public Matrix Sort()
         {
             int[] temparray = new int[Size];
             for (int i = 0; i < Size; i++)
@@ -94,6 +95,7 @@ namespace lab4
                 temparray = temparray.OrderByDescending(c => c).ToArray();
                 Array.Copy(temparray, 0, matrix, Size*i, Size);
             }
+            return this;
         }
 
         public void Print()
