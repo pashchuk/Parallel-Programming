@@ -38,6 +38,20 @@ namespace lab4
             return rezult;
         }
 
+        public static Vector operator *(Vector vector, Matrix matrix)
+        {
+            var rezult = new Vector(vector.Size);
+            var tempValue = 0;
+            for (int i = 0; i < rezult.Size; i++)
+            {
+                tempValue = 0;
+                for (int j = 0; j < rezult.Size; j++)
+                    tempValue += vector.GetElement(i) * matrix.GetElement(j, i);
+                rezult.SetElement(i, tempValue);
+            }
+            return rezult;
+        }
+
         public static int operator *(Vector v1, Vector v2)
         {
             int rezult = 0;
