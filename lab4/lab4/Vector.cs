@@ -89,9 +89,10 @@ namespace lab4
             Console.WriteLine();
         }
 
-        public void Sort()
+        public Vector Sort()
         {
             Array.Sort(vector);
+            return this;
         }
         #endregion
     }
