@@ -21,3 +21,15 @@
 *.iml
 *.idea
 /lab3/out/**
+
+#Visual Studio Project
+*.exe
+*.vshost
+*.manifest
+*.csproj
+*.config
+
+#folders
+/lab4/lab4/bin/**
+/lab4/lab4/obj/**
+/lab4/lab4/Properties/**
