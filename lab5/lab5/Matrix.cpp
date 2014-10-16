@@ -72,14 +72,8 @@ Matrix* Matrix::operator+(Matrix *matr){
 }
 
 Matrix* Matrix::sort(){
-	int *tempArr = new int[size];
 	for (int i = 0; i < size; i++){
-		for (int j = 0; j < size; j++)
-			tempArr[j] = matrix[i][j];
-		Arrays.sort(tempArr, Collections.reverseOrder());
-		for (int j = 0; j < matrix.length; j++)
-			matrix[i][j] = tempArr[j];
-	}
+		qsort(matrix[i], size, sizeof(int), [](const void *a, const void *b){return *((int*)b) - *((int*)a); });
 	return this;
 }
 
@@ -100,4 +94,12 @@ int Matrix::getElement(int line, int column){
 }
 void Matrix::setElement(int line, int column, int value){
 	matrix[line][column] = value;
+}
+
+void sort(int *arr, int len)
+{
+	for (int i = 0; i < len; i++)
+	for (int j = 0; j < len - i - 1; j++)
+	if (arr[j]>arr[j + 1])
+		std::swap(arr[j], arr[j + 1]);
 }

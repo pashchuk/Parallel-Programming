@@ -30,8 +30,13 @@
 *.config
 *.sln
 *.suo
+*.sdf
+*.opensdf
+*.vcxproj
+*.filters
 
 #folders
 /lab4/lab4/bin/**
 /lab4/lab4/obj/**
 /lab4/lab4/Properties/**
+/lab5/lab5/Debug/**
