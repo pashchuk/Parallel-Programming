@@ -25,7 +25,7 @@ void task3();
 
 using namespace std;
 
-int _tmain(int argc, TCHAR* argv[])
+int main(int argc, TCHAR* argv[])
 {
 	DWORD TidA, TidB, TidC;
 	HANDLE T1 = CreateThread(NULL, 10000, (LPTHREAD_START_ROUTINE)task1, NULL, 0, &TidA);
@@ -41,7 +41,7 @@ int _tmain(int argc, TCHAR* argv[])
 	CloseHandle(T2);
 	CloseHandle(T3);
 	cout << "Main thread close" << endl;
-	system("pause");
+	cin.get();
 	return 0;
 
 }
@@ -67,7 +67,8 @@ void task1() {
 	printf("Calculating F1 ...\n");
 	int d = (*B * *C) + (*A * *B) + (*C * *(*B * *(*MA * *MZ)));
 	if (SIZE<=10)
-		printf("d = %d\n\n\n", d);
+		printf("d = %d\n", d);
+	delete A, B, C, MA, MZ;
 	printf("Task1 finished\n");
 }
 
@@ -88,7 +89,9 @@ void task2() {
 		printf("MC = \n");
 		MC->print();
 	}
+	delete MA, MB, MC;
 	printf("Task2 finished\n");
+
 }
 
 
@@ -98,15 +101,15 @@ void task3() {
 		*M = new Vector(SIZE);
 	Matrix *MC = new Matrix(SIZE),
 		*MM = new Matrix(SIZE);
-	printf("generating vector A ...");
+	printf("generating vector A ...\n");
 	A->generate(FILL_NUMBER);
-	printf("generating vector M ...");
+	printf("generating vector M ...\n");
 	M->generate(FILL_NUMBER);
-	printf("generating matrix MC ...");
+	printf("generating matrix MC ...\n");
 	MC->generate(FILL_NUMBER);
-	printf("generating matrix MM ...");
+	printf("generating matrix MM ...\n");
 	MM->generate(FILL_NUMBER);
-	printf("Calculating F3 ...");
+	printf("Calculating F3 ...\n");
 	Sleep(100);
 	Vector *D = *((*A + *M)->sort()) * *((*MC * *MM)->transpose());
 	if (SIZE <= 10)
@@ -114,5 +117,6 @@ void task3() {
 		printf("D = \n");
 		D->print();
 	}
+	delete D, A, M, MC, MM;
 	printf("Task3 finished\n");
 }
