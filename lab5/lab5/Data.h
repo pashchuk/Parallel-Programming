@@ -1,9 +1,8 @@
-
 class Vector {
 private:
 	int size;
-	int *vector;
 public:
+	int *vector;
 	Vector(int);
 
 	~Vector();
@@ -14,11 +13,11 @@ public:
 
 	void setElement(int, int);
 
-	int operator*(Vector*);
+	int operator*(Vector&);
 
 	void print();
 
-	Vector* operator+(Vector*);
+	Vector* operator+(Vector &);
 
 	Vector* sort();
 
@@ -28,22 +27,20 @@ public:
 class Matrix {
 private:
 	int size;
-	int **matrix;
 
 public:
+	int **matrix;
 	Matrix(int);
 
 	~Matrix();
 
 	void generate(int);
 
-	Matrix* operator*(Matrix*);
+	Matrix* operator*(Matrix&);
 
 	void print();
 
-	Vector* operator*(Vector*);
-
-	Matrix* operator+(Matrix*);
+	Matrix* operator+(Matrix&);
 
 	Matrix* sort();
 
@@ -55,3 +52,6 @@ public:
 
 	void setElement(int line, int column, int value);
 };
+
+Vector* operator*(Matrix &, Vector &);
+Vector* operator*(Vector &, Matrix &);
