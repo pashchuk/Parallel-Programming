@@ -74,15 +74,22 @@ Matrix* Matrix::operator+(Matrix *matr){
 Matrix* Matrix::sort(){
 	for (int i = 0; i < size; i++){
 		qsort(matrix[i], size, sizeof(int), [](const void *a, const void *b){return *((int*)b) - *((int*)a); });
-	return this;
+		return this;
+	}
 }
 
-Matrix Matrix::transpose(){
-	Matrix rezult = new Matrix(matrix.length);
-	for (int i = 0; i < matrix.length; i++)
-	for (int j = 0; j < matrix.length; j++)
-		rezult.setElement(i, j, matrix[j][i]);
-	return rezult;
+Matrix* Matrix::transpose(){
+	int **rez = new int*[size];
+	for (int i = 0; i < size; i++)
+		rez[i] = new int[size];
+	for (int i = 0; i < size; i++)
+	for (int j = 0; j < size; j++)
+		rez[i][j] = matrix[j][i];
+	std::copy(rez, rez + size*size, matrix);
+	for (int i = 0; i < size; i++)
+		delete[] rez[i];
+	delete[] rez;
+	return this;
 }
 
 int Matrix::getSize(){
@@ -94,12 +101,4 @@ int Matrix::getElement(int line, int column){
 }
 void Matrix::setElement(int line, int column, int value){
 	matrix[line][column] = value;
-}
-
-void sort(int *arr, int len)
-{
-	for (int i = 0; i < len; i++)
-	for (int j = 0; j < len - i - 1; j++)
-	if (arr[j]>arr[j + 1])
-		std::swap(arr[j], arr[j + 1]);
 }
