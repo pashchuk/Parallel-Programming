@@ -1,7 +1,8 @@
 #include "Data.h"
 #include <iostream>
 
-Vector::Vector(int size){
+Vector::Vector(int sizes){
+	size = sizes;
 	vector = new int[size];
 }
 
@@ -23,25 +24,28 @@ void Vector::print(){
 	std::printf("\n");
 }
 
-int Vector::operator*(Vector *vec){
+int Vector::operator*(Vector &vec){
 	int rezult = 0;
 	for (int i = 0; i < size; i++)
-		rezult += vector[i]*vec->getElement(i);
+		rezult += vector[i]*vec.getElement(i);
 	return rezult;
 }
 
-Vector* Vector::operator+(Vector *vec){
+Vector* Vector::operator+(Vector &vec){
+	Vector *rezult = new Vector(size);
 	for (int i = 0; i < size; i++)
-		vector[i] += vec->getElement(i);
-	return this;
+		rezult->setElement(i, vector[i] + vec.getElement(i));
+	return rezult;
 }
 
 Vector* Vector::sort(){
+	Vector * rezult = new Vector(size);
+	std::copy(vector, (int*)vector + size, rezult->vector);
 	for (int i = 0; i < size; i++)
 		for (int j = 0; j < size - i - 1; j++)
-			if (vector[j]>vector[j + 1])
-				std::swap(vector[j], vector[j + 1]);
-	return this;
+			if (rezult->vector[j]>rezult->vector[j + 1])
+				std::swap(rezult->vector[j], rezult->vector[j + 1]);
+	return rezult;
 }
 
 int Vector::getSize(){
