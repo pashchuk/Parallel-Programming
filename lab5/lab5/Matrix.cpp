@@ -46,9 +46,9 @@ Matrix* Matrix::operator+(Matrix &matr){
 
 Matrix* Matrix::sort(){
 	Matrix *rezult = new Matrix(size);
-	std::copy(matrix, matrix + size*size, (int*)rezult + 1);
+	std::copy(matrix, (int**)matrix + size, rezult->matrix);
 	for (int i = 0; i < size; i++)
-		qsort((int*)rezult+1+i*size, size, sizeof(int), [](const void *a, const void *b){return *((int*)b) - *((int*)a); });
+		qsort(rezult->matrix[i], size, sizeof(int), [](const void *a, const void *b){return *((int*)b) - *((int*)a); });
 	return rezult;
 }
 
