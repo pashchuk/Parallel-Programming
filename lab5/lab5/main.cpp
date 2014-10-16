@@ -14,23 +14,25 @@
 
 #include <windows.h>
 #include <iostream>
-#include "Matrix.h"
-#include "Vector.h"
+#include "Data.h"
 
-void Task1();
-void Task2();
-void Task3();
+#define SIZE 10
+#define FILL_NUMBER 1
+
+void task1();
+void task2();
+void task3();
 
 using namespace std;
 
-int _tmain(int argc, _TCHAR* argv[])
+int _tmain(int argc, TCHAR* argv[])
 {
 	DWORD TidA, TidB, TidC;
-	HANDLE T1 = CreateThread(NULL, 10000, (LPTHREAD_START_ROUTINE)Task1, NULL, 0, &TidA);
+	HANDLE T1 = CreateThread(NULL, 10000, (LPTHREAD_START_ROUTINE)task1, NULL, 0, &TidA);
 	SetThreadPriority(T1, 1);
-	HANDLE T2 = CreateThread(NULL, 10000, (LPTHREAD_START_ROUTINE)Task2, NULL, 0, &TidB);
+	HANDLE T2 = CreateThread(NULL, 10000, (LPTHREAD_START_ROUTINE)task2, NULL, 0, &TidB);
 	SetThreadPriority(T2, 2);
-	HANDLE T3 = CreateThread(NULL, 10000, (LPTHREAD_START_ROUTINE)Task3, NULL, 0, &TidC);
+	HANDLE T3 = CreateThread(NULL, 10000, (LPTHREAD_START_ROUTINE)task3, NULL, 0, &TidC);
 	SetThreadPriority(T3, 3);
 	WaitForSingleObject(T1, INFINITE);
 	WaitForSingleObject(T2, INFINITE);
@@ -44,56 +46,73 @@ int _tmain(int argc, _TCHAR* argv[])
 
 }
 
-void Task1(){
-	Vector  A, B, Func1_Result;
-	int** MA, **MZ;
-	Data data;
-	cout << ("Task1 started") << endl;
-	A = data.Get_Vector();
-	B = data.Get_Vector();
-	MA = data.Get_Matrix();
-	MZ = data.Get_Matrix();
-	Sleep(100);
-	Func1_Result = data.Func1(A, B, MA, MZ);
-	cout << ("Func1 Result:") << endl;
-	data.Print_Vector(Func1_Result);
-	cout << endl << ("Task 1 finished") << endl;
-	for (int i = 0; i < data.getSize(); ++i)
-		delete[] MZ[i];
-	delete[] MZ, Func1_Result, A, B;
-}
-
-void Task2(){
-	int** MA, **MB, **MC, **Func2_Result;
-	cout << ("Task2 started") << endl;
-	Data data;
-	MA = data.Get_Matrix();
-	MB = data.Get_Matrix();
-	MC = data.Get_Matrix();
+void task1() {
+	printf("Task1 started\n");
+	Vector *A = new Vector(SIZE),
+		*B = new Vector(SIZE),
+		*C = new Vector(SIZE);
+	Matrix *MA = new Matrix(SIZE),
+		*MZ = new Matrix(SIZE);
+	printf("generating vector A ...\n");
+	A->generate(FILL_NUMBER);
+	printf("generating vector B ...\n");
+	B->generate(FILL_NUMBER);
+	printf("generating vector C ...\n");
+	C->generate(FILL_NUMBER);
+	printf("generating matrix MA ...\n");
+	MA->generate(FILL_NUMBER);
+	printf("generating matrix MZ ...\n");
+	MZ->generate(FILL_NUMBER);
 	Sleep(3000);
-	Func2_Result = data.Func2(MA, MB, MC);
-	cout << endl << ("Func2 Result:") << endl;
-	data.Print_Matrix(Func2_Result);
-	cout << ("Task2 finished") << endl;
-	for (int i = 0; i < data.getSize(); ++i)
-		delete[] MA[i], MB[i], MC[i], Func2_Result[i];
-	delete[] MA, MB, MC, Func2_Result;
+	printf("Calculating F1 ...\n");
+	int d = (*B * *C) + (*A * *B) + (*C * *(*B * *(*MA * *MZ)));
+	if (SIZE<=10)
+		printf("d = %d\n\n\n", d);
+	printf("Task1 finished\n");
 }
 
-void Task3() {
-	// TODO Auto-generated method stub
-	int** MB, **MC, **MM, **Func3_Result;
-	cout << ("Task3 started") << endl;
-	Data data;
-	MB = data.Get_Matrix();
-	MC = data.Get_Matrix();
-	MM = data.Get_Matrix();
-	Sleep(5000);
-	Func3_Result = data.Func3(MB, MC, MM);
-	cout << ("Func3 Result:") << endl;
-	data.Print_Vector(Func3_Result);
-	cout << endl << ("Task3 finished") << endl;
-	for (int i = 0; i < data.getSize(); ++i)
-		delete[] MM[i], MB[i], MC[i], Func3_Result[i];
-	delete[] MM, MB, MC, Func3_Result;
+
+void task2() {
+	printf("Task2 started\n");
+	Matrix *MA = new Matrix(SIZE),
+		*MB = new Matrix(SIZE);
+	printf("generating matrix MA ...\n");
+	MA->generate(FILL_NUMBER);
+	printf("generating matrix MB ...\n");
+	MB->generate(FILL_NUMBER);
+	Sleep(1500);
+	printf("Calculating F2 ...\n");
+	Matrix *MC = (MA->transpose(), MB)->sort();
+	if (SIZE <= 10)
+	{
+		printf("MC = \n");
+		MC->print();
+	}
+	printf("Task2 finished\n");
+}
+
+
+void task3() {
+	printf("Task3 started\n");
+	Vector *A = new Vector(SIZE),
+		*M = new Vector(SIZE);
+	Matrix *MC = new Matrix(SIZE),
+		*MM = new Matrix(SIZE);
+	printf("generating vector A ...");
+	A->generate(FILL_NUMBER);
+	printf("generating vector M ...");
+	M->generate(FILL_NUMBER);
+	printf("generating matrix MC ...");
+	MC->generate(FILL_NUMBER);
+	printf("generating matrix MM ...");
+	MM->generate(FILL_NUMBER);
+	printf("Calculating F3 ...");
+	Sleep(100);
+	Vector *D = *((*A + *M)->sort()) * *((*MC * *MM)->transpose());
+	if (SIZE <= 10)
+	{
+		printf("D = \n");
+		D->print();
+	}
+	printf("Task3 finished\n");
 }
