@@ -20,6 +20,7 @@
 #define SIZE 10
 #define FILL_NUMBER 1
 
+
 void task1();
 void task2();
 void task3();
@@ -28,19 +29,20 @@ using namespace std;
 
 int main(int argc, TCHAR* argv[])
 {
-	DWORD TidA, TidB, TidC;
-	HANDLE T1 = CreateThread(NULL, 10000, (LPTHREAD_START_ROUTINE)task1, NULL, 0, &TidA);
-	SetThreadPriority(T1, 1);
-	HANDLE T2 = CreateThread(NULL, 10000, (LPTHREAD_START_ROUTINE)task2, NULL, 0, &TidB);
-	SetThreadPriority(T2, 2);
-	HANDLE T3 = CreateThread(NULL, 10000, (LPTHREAD_START_ROUTINE)task3, NULL, 0, &TidC);
-	SetThreadPriority(T3, 3);
-	WaitForSingleObject(T1, INFINITE);
-	WaitForSingleObject(T2, INFINITE);
-	WaitForSingleObject(T3, INFINITE);
-	CloseHandle(T1);
-	CloseHandle(T2);
-	CloseHandle(T3);
+#pragma omp parallel num_threads(3)
+	{
+		SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_ABOVE_NORMAL);
+	}
+#pragma omp parallel num_threads(3)
+	{
+		int i = omp_get_thread_num();
+		if (i == 0)
+			task1();
+		if (i == 1)
+			task2();
+		if (i == 2)
+			task3();
+	}
 	cout << "Main thread close" << endl;
 	cin.get();
 	return 0;
