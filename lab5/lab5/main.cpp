@@ -1,7 +1,7 @@
 /*
 ---------------------------------------------------------------------------------
 --              Laboratory Work #5
---        Lab5.Threads in C# programming language
+--        Lab5.Threads in WinAPI library
 --      Name      Pashchuk Eduard Fedorovich
 --      Group     IP-22
 --      Date      16.10.2014
