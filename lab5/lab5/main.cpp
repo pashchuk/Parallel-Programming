@@ -83,7 +83,7 @@ void task2() {
 	MB->generate(FILL_NUMBER);
 	Sleep(1500);
 	printf("Calculating F2 ...\n");
-	Matrix *MC = (MA->transpose(), MB)->sort();
+	Matrix *MC = (* MA->transpose() * *MB)->sort();
 	if (SIZE <= 10)
 	{
 		printf("MC = \n");
