@@ -1,7 +1,7 @@
 /*
 ---------------------------------------------------------------------------------
 --              Laboratory Work #6
---        Lab5.Threads in OpenMP library
+--        Lab6.Threads in OpenMP library
 --      Name      Pashchuk Eduard Fedorovich
 --      Group     IP-22
 --      Date      18.10.2014
