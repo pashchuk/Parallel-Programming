@@ -33,6 +33,7 @@ int main(int argc, TCHAR* argv[])
 	{
 		SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_ABOVE_NORMAL);
 	}
+	omp_set_nested(1);
 #pragma omp parallel num_threads(3)
 	{
 		int i = omp_get_thread_num();

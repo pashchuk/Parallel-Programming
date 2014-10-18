@@ -26,6 +26,7 @@ void Vector::print(){
 
 int Vector::operator*(Vector &vec){
 	int rezult = 0;
+#pragma omp parallel for reduction(+:rezult)
 	for (int i = 0; i < size; i++)
 		rezult += vector[i] * vec.getElement(i);
 	return rezult;
