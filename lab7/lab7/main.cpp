@@ -15,10 +15,13 @@
 #include <windows.h>
 #include <iostream>
 #include <mpi.h>
+#include <stdio.h>
 #include "Data.h"
 
 #define SIZE 10
 #define FILL_NUMBER 1
+
+#define RezultTag 3
 
 void task1();
 void task2();
@@ -31,11 +34,11 @@ int main(int argc, char** argv)
 	int rank;
 	MPI_Init(&argc, &argv);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	Vector *A = new Vector(SIZE);
 	if (rank == 0)
 	{
-		int asd = 34;
-		MPI_Recv(&asd, 1, MPI_INT, 1, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
-		printf("%d",asd);
+		MPI_Recv(A->vector, SIZE, MPI_INT, MPI_ANY_SOURCE, RezultTag, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
+		printf("%d\n", A->vector[0]);
 	}
 	if (rank == 1)
 		task1();
@@ -45,15 +48,12 @@ int main(int argc, char** argv)
 		task3();
 	cout << "Main thread close" << endl;
 	MPI_Finalize();
-	cin.get();
 	return 0;
 
 }
 
 void task1() {
 	printf("Task1 started\n");
-	int a = 3;
-	MPI_Send(&a, 1, MPI_INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD);
 	Vector *A = new Vector(SIZE),
 		*B = new Vector(SIZE),
 		*C = new Vector(SIZE);
@@ -61,6 +61,7 @@ void task1() {
 		*MZ = new Matrix(SIZE);
 	printf("generating vector A ...\n");
 	A->generate(FILL_NUMBER);
+	MPI_Send(A->vector, SIZE, MPI_INT, 0, RezultTag, MPI_COMM_WORLD);
 	printf("generating vector B ...\n");
 	B->generate(FILL_NUMBER);
 	printf("generating vector C ...\n");
