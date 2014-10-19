@@ -46,7 +46,17 @@ int main(int argc, char** argv)
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	if (rank == 0)
 	{
-
+		//Sending all data into generate process
+		MPI_Send(A, SIZE*SIZE + 1, MPI_INT, 1, MPI_ANY_TAG, MPI_COMM_WORLD);
+		MPI_Send(B, SIZE*SIZE + 1, MPI_INT, 1, MPI_ANY_TAG, MPI_COMM_WORLD);
+		MPI_Send(C, SIZE*SIZE + 1, MPI_INT, 1, MPI_ANY_TAG, MPI_COMM_WORLD);
+		MPI_Send(M, SIZE*SIZE + 1, MPI_INT, 1, MPI_ANY_TAG, MPI_COMM_WORLD);
+		MPI_Send(MA, SIZE*SIZE + 1, MPI_INT, 1, MPI_ANY_TAG, MPI_COMM_WORLD);
+		MPI_Send(MB, SIZE*SIZE + 1, MPI_INT, 1, MPI_ANY_TAG, MPI_COMM_WORLD);	
+		MPI_Send(MC, SIZE*SIZE + 1, MPI_INT, 1, MPI_ANY_TAG, MPI_COMM_WORLD);
+		MPI_Send(MM, SIZE*SIZE + 1, MPI_INT, 1, MPI_ANY_TAG, MPI_COMM_WORLD);
+		MPI_Send(MZ, SIZE*SIZE + 1, MPI_INT, 1, MPI_ANY_TAG, MPI_COMM_WORLD);
+		
 	}
 	if (rank == 1)
 		task1();
@@ -62,8 +72,43 @@ int main(int argc, char** argv)
 }
 
 void task1() {
-	Vector *A, *B, *C;
-	Matrix *MA, *MZ;
+	Vector *A, *B, *C, *M;
+	Matrix *MA, *MB, *MC, *MM, *MZ;
+
+	printf("generating vector A ...\n");
+	A->generate(FILL_NUMBER);
+	printf("generating vector B ...\n");
+	B->generate(FILL_NUMBER);
+	printf("generating vector C ...\n");
+	C->generate(FILL_NUMBER);
+	printf("generating vector M ...\n");
+	M->generate(FILL_NUMBER);
+	printf("generating matrix MA ...\n");
+	MA->generate(FILL_NUMBER);
+	printf("generating matrix MB ...\n");
+	MB->generate(FILL_NUMBER);
+	printf("generating matrix MC ...\n");
+	MC->generate(FILL_NUMBER);
+	printf("generating matrix MM ...\n");
+	MM->generate(FILL_NUMBER);
+	printf("generating matrix MZ ...\n");
+	MZ->generate(FILL_NUMBER);
+
+	//Sending all data into generate process
+	//Send data to complete first task
+	MPI_Send(A, SIZE*SIZE + 1, MPI_INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD);
+	MPI_Send(B, SIZE*SIZE + 1, MPI_INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD);
+	MPI_Send(C, SIZE*SIZE + 1, MPI_INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD);
+	MPI_Send(MA, SIZE*SIZE + 1, MPI_INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD);
+	MPI_Send(MZ, SIZE*SIZE + 1, MPI_INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD);
+	//Send data to complete second task
+	MPI_Send(MA, SIZE*SIZE + 1, MPI_INT, 2, MPI_ANY_TAG, MPI_COMM_WORLD);
+	MPI_Send(MB, SIZE*SIZE + 1, MPI_INT, 2, MPI_ANY_TAG, MPI_COMM_WORLD);
+	//Send data to complete third task
+	MPI_Send(A, SIZE*SIZE + 1, MPI_INT, 3, MPI_ANY_TAG, MPI_COMM_WORLD);
+	MPI_Send(M, SIZE*SIZE + 1, MPI_INT, 3, MPI_ANY_TAG, MPI_COMM_WORLD);
+	MPI_Send(MC, SIZE*SIZE + 1, MPI_INT, 3, MPI_ANY_TAG, MPI_COMM_WORLD);
+	MPI_Send(MM, SIZE*SIZE + 1, MPI_INT, 3, MPI_ANY_TAG, MPI_COMM_WORLD);
 	printf("Task1 started\n");
 	Sleep(3000);
 	printf("Calculating F1 ...\n");
@@ -107,29 +152,4 @@ void task3() {
 	}
 	delete D, A, M, MC, MM;
 	printf("Task3 finished\n");
-}
-
-void GenerateTask()
-{
-	Vector *A, *B, *C, *M;
-	Matrix *MA, *MB, *MC, *MM, *MZ;
-
-	printf("generating vector A ...\n");
-	A->generate(FILL_NUMBER);
-	printf("generating vector B ...\n");
-	B->generate(FILL_NUMBER);
-	printf("generating vector C ...\n");
-	C->generate(FILL_NUMBER);
-	printf("generating vector M ...\n");
-	M->generate(FILL_NUMBER);
-	printf("generating matrix MA ...\n");
-	MA->generate(FILL_NUMBER);
-	printf("generating matrix MB ...\n");
-	MB->generate(FILL_NUMBER);
-	printf("generating matrix MC ...\n");
-	MC->generate(FILL_NUMBER);
-	printf("generating matrix MM ...\n");
-	MM->generate(FILL_NUMBER);
-	printf("generating matrix MZ ...\n");
-	MZ->generate(FILL_NUMBER);
 }
