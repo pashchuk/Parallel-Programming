@@ -14,6 +14,7 @@
 
 #include <windows.h>
 #include <iostream>
+#include <mpi.h>
 #include "Data.h"
 
 #define SIZE 10
@@ -25,22 +26,19 @@ void task3();
 
 using namespace std;
 
-int main(int argc, TCHAR* argv[])
+int main(int argc, char** argv)
 {
-	DWORD TidA, TidB, TidC;
-	HANDLE T1 = CreateThread(NULL, 10000, (LPTHREAD_START_ROUTINE)task1, NULL, 0, &TidA);
-	SetThreadPriority(T1, 1);
-	HANDLE T2 = CreateThread(NULL, 10000, (LPTHREAD_START_ROUTINE)task2, NULL, 0, &TidB);
-	SetThreadPriority(T2, 2);
-	HANDLE T3 = CreateThread(NULL, 10000, (LPTHREAD_START_ROUTINE)task3, NULL, 0, &TidC);
-	SetThreadPriority(T3, 3);
-	WaitForSingleObject(T1, INFINITE);
-	WaitForSingleObject(T2, INFINITE);
-	WaitForSingleObject(T3, INFINITE);
-	CloseHandle(T1);
-	CloseHandle(T2);
-	CloseHandle(T3);
+	int rank;
+	MPI_Init(&argc, &argv);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	if (rank == 1)
+		task1();
+	if (rank == 2)
+		task2();
+	if (rank == 3)
+		task3();
 	cout << "Main thread close" << endl;
+	MPI_Finalize();
 	cin.get();
 	return 0;
 
@@ -70,6 +68,8 @@ void task1() {
 		printf("d = %d\n", d);
 	delete A, B, C, MA, MZ;
 	printf("Task1 finished\n");
+	int a = 1;
+	MPI_Send(&a, 1, MPI_INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD);
 }
 
 
