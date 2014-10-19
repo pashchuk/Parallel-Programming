@@ -20,6 +20,9 @@
 #define SIZE 10
 #define FILL_NUMBER 1
 
+#define PrintTag 1
+#define ResourceTag 2
+
 void task1();
 void task2();
 void task3();
@@ -29,8 +32,22 @@ using namespace std;
 int main(int argc, char** argv)
 {
 	int rank;
+	Vector *A = new Vector(SIZE),
+		*B = new Vector(SIZE),
+		*C = new Vector(SIZE),
+		*M = new Vector(SIZE);
+	Matrix *MA = new Matrix(SIZE),
+		*MB = new Matrix(SIZE),
+		*MC = new Matrix(SIZE),
+		*MM = new Matrix(SIZE),
+		*MZ = new Matrix(SIZE);
+
 	MPI_Init(&argc, &argv);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	if (rank == 0)
+	{
+
+	}
 	if (rank == 1)
 		task1();
 	if (rank == 2)
@@ -45,22 +62,9 @@ int main(int argc, char** argv)
 }
 
 void task1() {
+	Vector *A, *B, *C;
+	Matrix *MA, *MZ;
 	printf("Task1 started\n");
-	Vector *A = new Vector(SIZE),
-		*B = new Vector(SIZE),
-		*C = new Vector(SIZE);
-	Matrix *MA = new Matrix(SIZE),
-		*MZ = new Matrix(SIZE);
-	printf("generating vector A ...\n");
-	A->generate(FILL_NUMBER);
-	printf("generating vector B ...\n");
-	B->generate(FILL_NUMBER);
-	printf("generating vector C ...\n");
-	C->generate(FILL_NUMBER);
-	printf("generating matrix MA ...\n");
-	MA->generate(FILL_NUMBER);
-	printf("generating matrix MZ ...\n");
-	MZ->generate(FILL_NUMBER);
 	Sleep(3000);
 	printf("Calculating F1 ...\n");
 	int d = (*B * *C) + (*A * *B) + (*C * *(*B * *(*MA * *MZ)));
@@ -75,12 +79,7 @@ void task1() {
 
 void task2() {
 	printf("Task2 started\n");
-	Matrix *MA = new Matrix(SIZE),
-		*MB = new Matrix(SIZE);
-	printf("generating matrix MA ...\n");
-	MA->generate(FILL_NUMBER);
-	printf("generating matrix MB ...\n");
-	MB->generate(FILL_NUMBER);
+	Matrix *MA ,*MB ;
 	Sleep(1500);
 	printf("Calculating F2 ...\n");
 	Matrix *MC = (*MA->transpose() * *MB)->sort();
@@ -91,24 +90,13 @@ void task2() {
 	}
 	delete MA, MB, MC;
 	printf("Task2 finished\n");
-
 }
 
 
 void task3() {
 	printf("Task3 started\n");
-	Vector *A = new Vector(SIZE),
-		*M = new Vector(SIZE);
-	Matrix *MC = new Matrix(SIZE),
-		*MM = new Matrix(SIZE);
-	printf("generating vector A ...\n");
-	A->generate(FILL_NUMBER);
-	printf("generating vector M ...\n");
-	M->generate(FILL_NUMBER);
-	printf("generating matrix MC ...\n");
-	MC->generate(FILL_NUMBER);
-	printf("generating matrix MM ...\n");
-	MM->generate(FILL_NUMBER);
+	Vector *A, *M;
+	Matrix *MC, *MM;
 	printf("Calculating F3 ...\n");
 	Sleep(100);
 	Vector *D = *((*A + *M)->sort()) * *((*MC * *MM)->transpose());
@@ -119,4 +107,29 @@ void task3() {
 	}
 	delete D, A, M, MC, MM;
 	printf("Task3 finished\n");
+}
+
+void GenerateTask()
+{
+	Vector *A, *B, *C, *M;
+	Matrix *MA, *MB, *MC, *MM, *MZ;
+
+	printf("generating vector A ...\n");
+	A->generate(FILL_NUMBER);
+	printf("generating vector B ...\n");
+	B->generate(FILL_NUMBER);
+	printf("generating vector C ...\n");
+	C->generate(FILL_NUMBER);
+	printf("generating vector M ...\n");
+	M->generate(FILL_NUMBER);
+	printf("generating matrix MA ...\n");
+	MA->generate(FILL_NUMBER);
+	printf("generating matrix MB ...\n");
+	MB->generate(FILL_NUMBER);
+	printf("generating matrix MC ...\n");
+	MC->generate(FILL_NUMBER);
+	printf("generating matrix MM ...\n");
+	MM->generate(FILL_NUMBER);
+	printf("generating matrix MZ ...\n");
+	MZ->generate(FILL_NUMBER);
 }
