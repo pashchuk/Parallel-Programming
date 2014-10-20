@@ -41,7 +41,12 @@ int main(int argc, char** argv)
 		int f1;
 		Matrix *f2 = new Matrix(SIZE);
 		Vector *f3 = new Vector(SIZE);
-		
+		char *buffer = new char[50];
+		for (int i = 0; i < 18; i++)
+			MPI_Recv(buffer, 50, MPI_CHAR, MPI_ANY_SOURCE, PrintTag, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
+		MPI_Recv(&f1, 1, MPI_INT, 1, RezultTag, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
+		MPI_Recv(f2, SIZE*SIZE + 1, MPI_INT, 2, RezultTag, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
+		MPI_Recv(f3, SIZE + 1, MPI_INT, 3, RezultTag, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
 		if (SIZE <= 10)
 		{
 			printf("d = %d\n", f1);
@@ -50,7 +55,6 @@ int main(int argc, char** argv)
 			printf("D = \n");
 			f3->print();
 		}
-
 	}
 	if (rank == 1)
 		task1();
