@@ -47,6 +47,8 @@ int main(int argc, char** argv)
 			printf("d = %d\n", f1);
 			printf("MC = \n");
 			f2->print();
+			printf("D = \n");
+			f3->print();
 		}
 
 	}
@@ -107,27 +109,22 @@ void task2() {
 
 
 void task3() {
-	printf("Task3 started\n");
+	MPI_Send("Task3 started\n", 14, MPI_CHAR, 0, PrintTag, MPI_COMM_WORLD);
 	Vector *A = new Vector(SIZE),
 		*M = new Vector(SIZE);
 	Matrix *MC = new Matrix(SIZE),
 		*MM = new Matrix(SIZE);
-	printf("generating vector A ...\n");
-	A->generate(FILL_NUMBER);
-	printf("generating vector M ...\n");
+	MPI_Recv(A, SIZE + 1, MPI_INT, 1, ResourcesTag, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
+	MPI_Send("generating vector M ...\n", 24, MPI_CHAR, 0, PrintTag, MPI_COMM_WORLD);
 	M->generate(FILL_NUMBER);
-	printf("generating matrix MC ...\n");
+	MPI_Send("generating matrix MC ...\n", 25, MPI_CHAR, 0, PrintTag, MPI_COMM_WORLD);
 	MC->generate(FILL_NUMBER);
-	printf("generating matrix MM ...\n");
+	MPI_Send("generating matrix MM ...\n", 25, MPI_CHAR, 0, PrintTag, MPI_COMM_WORLD);
 	MM->generate(FILL_NUMBER);
-	printf("Calculating F3 ...\n");
+	MPI_Send("Calculating F3 ...\n", 19, MPI_CHAR, 0, PrintTag, MPI_COMM_WORLD);
 	Sleep(100);
 	Vector *D = *((*A + *M)->sort()) * *((*MC * *MM)->transpose());
-	if (SIZE <= 10)
-	{
-		printf("D = \n");
-		D->print();
-	}
+	MPI_Send("Task3 finished\n", 15, MPI_CHAR, 0, PrintTag, MPI_COMM_WORLD);
+	MPI_Send(&D, SIZE + 1, MPI_INT, 0, RezultTag, MPI_COMM_WORLD);
 	delete D, A, M, MC, MM;
-	printf("Task3 finished\n");
 }
