@@ -5,8 +5,9 @@
 Matrix::Matrix(int sizes){
 	size = sizes;
 	matrix = new int*[size];
-	for (int i = 0; i < size; ++i)
-		matrix[i] = new int[size];
+	int *alloc = new int[sizes*sizes];
+	for (int i = 0; i < sizes; i++)
+		matrix[i] = &(alloc[sizes*i]);
 }
 
 void Matrix::generate(int filledDigit){
@@ -73,8 +74,7 @@ void Matrix::setElement(int line, int column, int value){
 
 Matrix::~Matrix()
 {
-	for (int i = 0; i < size; i++)
-		delete[] matrix[i];
+	delete[] matrix[0];
 	delete[] matrix;
 }
 
