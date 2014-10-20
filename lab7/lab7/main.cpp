@@ -27,7 +27,6 @@
 void task1();
 void task2();
 void task3();
-void test();
 
 using namespace std;
 
@@ -157,11 +156,4 @@ void task3() {
 	MPI_Send(buffer, 25, MPI_CHAR, 0, PrintTag, MPI_COMM_WORLD);
 	MPI_Send(&(D->vector[0]), SIZE, MPI_INT, 0, RezultTag, MPI_COMM_WORLD);
 	delete D, A, M, MC, MM;
-}
-
-void test()
-{
-	char buffer[27];
-	strcpy(buffer, "Task1 started\n");
-	MPI_Send(buffer, 25, MPI_CHAR, 0, PrintTag, MPI_COMM_WORLD);
 }
