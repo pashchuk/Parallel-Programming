@@ -21,6 +21,8 @@
 #define SIZE 10
 #define FILL_NUMBER 1
 
+#define PrintTag 1
+#define ResourcesTag 2
 #define RezultTag 3
 
 void task1();
@@ -34,11 +36,19 @@ int main(int argc, char** argv)
 	int rank;
 	MPI_Init(&argc, &argv);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-	Vector *A = new Vector(SIZE);
 	if (rank == 0)
 	{
-		MPI_Recv(A->vector, SIZE, MPI_INT, MPI_ANY_SOURCE, RezultTag, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
-		printf("%d\n", A->vector[0]);
+		int f1;
+		Matrix *f2 = new Matrix(SIZE);
+		Vector *f3 = new Vector(SIZE);
+		
+		if (SIZE <= 10)
+		{
+			printf("d = %d\n", f1);
+			printf("MC = \n");
+			f2->print();
+		}
+
 	}
 	if (rank == 1)
 		task1();
@@ -53,52 +63,46 @@ int main(int argc, char** argv)
 }
 
 void task1() {
-	printf("Task1 started\n");
+	MPI_Send("Task1 started\n", 14, MPI_CHAR, 0, PrintTag, MPI_COMM_WORLD);
 	Vector *A = new Vector(SIZE),
 		*B = new Vector(SIZE),
 		*C = new Vector(SIZE);
 	Matrix *MA = new Matrix(SIZE),
 		*MZ = new Matrix(SIZE);
-	printf("generating vector A ...\n");
+	MPI_Send("generating vector A ...\n", 24, MPI_CHAR, 0, PrintTag, MPI_COMM_WORLD);
 	A->generate(FILL_NUMBER);
-	MPI_Send(A->vector, SIZE, MPI_INT, 0, RezultTag, MPI_COMM_WORLD);
-	printf("generating vector B ...\n");
+	MPI_Send(A, SIZE + 1, MPI_INT, 3, ResourcesTag, MPI_COMM_WORLD);
+	MPI_Send("generating vector B ...\n", 24, MPI_CHAR, 0, PrintTag, MPI_COMM_WORLD);
 	B->generate(FILL_NUMBER);
-	printf("generating vector C ...\n");
+	MPI_Send("generating vector C ...\n", 24, MPI_CHAR, 0, PrintTag, MPI_COMM_WORLD);
 	C->generate(FILL_NUMBER);
-	printf("generating matrix MA ...\n");
+	MPI_Send("generating matrix MA ...\n", 25, MPI_CHAR, 0, PrintTag, MPI_COMM_WORLD);
 	MA->generate(FILL_NUMBER);
-	printf("generating matrix MZ ...\n");
+	MPI_Send(MA, SIZE*SIZE + 1, MPI_INT, 2, ResourcesTag, MPI_COMM_WORLD);
+	MPI_Send("generating matrix MZ ...\n", 25, MPI_CHAR, 0, PrintTag, MPI_COMM_WORLD);
 	MZ->generate(FILL_NUMBER);
 	Sleep(3000);
-	printf("Calculating F1 ...\n");
+	MPI_Send("Calculating F1 ...\n", 19, MPI_CHAR, 0, PrintTag, MPI_COMM_WORLD);
 	int d = (*B * *C) + (*A * *B) + (*C * *(*B * *(*MA * *MZ)));
-	if (SIZE <= 10)
-		printf("d = %d\n", d);
 	delete A, B, C, MA, MZ;
-	printf("Task1 finished\n");
+	MPI_Send("Task1 finished\n", 15, MPI_CHAR, 0, PrintTag, MPI_COMM_WORLD);
+	MPI_Send(&d, 1, MPI_INT, 0, RezultTag, MPI_COMM_WORLD);
 }
 
 
 void task2() {
-	printf("Task2 started\n");
+	MPI_Send("Task2 started\n", 14, MPI_CHAR, 0, PrintTag, MPI_COMM_WORLD);
 	Matrix *MA = new Matrix(SIZE),
 		*MB = new Matrix(SIZE);
-	printf("generating matrix MA ...\n");
-	MA->generate(FILL_NUMBER);
-	printf("generating matrix MB ...\n");
+	MPI_Recv(MA, SIZE*SIZE + 1, MPI_INT, 1, ResourcesTag, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
+	MPI_Send("generating matrix MB ...\n", 25, MPI_CHAR, 0, PrintTag, MPI_COMM_WORLD);
 	MB->generate(FILL_NUMBER);
 	Sleep(1500);
-	printf("Calculating F2 ...\n");
+	MPI_Send("Calculating F2 ...\n", 19, MPI_CHAR, 0, PrintTag, MPI_COMM_WORLD);
 	Matrix *MC = (*MA->transpose() * *MB)->sort();
-	if (SIZE <= 10)
-	{
-		printf("MC = \n");
-		MC->print();
-	}
+	MPI_Send("Task2 finished\n", 15, MPI_CHAR, 0, PrintTag, MPI_COMM_WORLD);
+	MPI_Send(&MC, SIZE*SIZE+1, MPI_INT, 0, RezultTag, MPI_COMM_WORLD);
 	delete MA, MB, MC;
-	printf("Task2 finished\n");
-
 }
 
 
