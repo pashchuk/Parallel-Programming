@@ -17,7 +17,10 @@ def f1(a,b,c,ma,mz):
     return b.dot(c) + a.dot(b) + dot(ma,mz).dot(b).dot(a)
 
 def f2(ma,mb):
+    return sort(dot(mb,ma.transpose()))[:,::-1]
 
+def f3(a,m,mc,mm):
+    return sort(a + m).dot(dot(mc,mm).transpose())
 
 a = ones(size,dtype=int32)
 b = ones(size,dtype=int32)
@@ -29,5 +32,6 @@ mc = ones((size,size),dtype=int32)
 mm = ones((size,size),dtype=int32)
 mz = ones((size,size),dtype=int32)
 
-ma.transpose()
 print f1(a,b,c,ma,mz)
+print f2(ma,mb)
+print f3(a,m,mc,mm)
