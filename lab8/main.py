@@ -7,7 +7,7 @@ from multiprocessing import Process, Lock
 # --         Lab7.Threads in Python programming language
 # --      Name      Pashchuk Eduard Fedorovich
 # --      Group     IP-22
-# --      Date      19.10.2014
+# --      Date      21.10.2014
 # --      F1        d = (B*C) + (A*B) +(C*(B*(MA*MZ)))
 # --      F2        MC = SORT(TRANS(MA)*MB)
 # --      F3        D = SORT(A + M)*TRANS(MC*MM)
