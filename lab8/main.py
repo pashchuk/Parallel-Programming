@@ -12,7 +12,7 @@ from multiprocessing import Process, Lock
 # --      F2        MC = SORT(TRANS(MA)*MB)
 # --      F3        D = SORT(A + M)*TRANS(MC*MM)
 # ---------------------------------------------------------------------------------
-size = 10
+size = 2000
 
 def f1(a,b,c,ma,mz,l):
     d = b.dot(c) + a.dot(b) + dot(ma,mz).dot(b).dot(a)
@@ -43,4 +43,12 @@ if __name__ == '__main__':
     mm = ones((size,size),dtype=int32)
     mz = ones((size,size),dtype=int32)
     lock = Lock()
-    
+    t1 = Process(target=f1,name='task1',args=(a,b,c,ma,mz,lock))
+    t2 = Process(target=f2,name='task2',args=(ma,mb,lock))
+    t3 = Process(target=f3,name='task3',args=(a,m,mc,mm,lock))
+    t1.start()
+    t2.start()
+    t3.start()
+    t1.join()
+    t2.join()
+    t3.join()
