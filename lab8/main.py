@@ -4,7 +4,7 @@ from multiprocessing import Process, Lock
 
 # ---------------------------------------------------------------------------------
 # --                   Laboratory Work #8
-# --         Lab7.Threads in Python programming language
+# --         Lab8.Threads in Python programming language
 # --      Name      Pashchuk Eduard Fedorovich
 # --      Group     IP-22
 # --      Date      21.10.2014
