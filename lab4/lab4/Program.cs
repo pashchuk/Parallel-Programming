@@ -20,10 +20,10 @@ namespace lab4
 {
     class Program
     {
+	    private static Semaphore pool = new Semaphore(1, 1);
         private const int Size = 10;
         private const int Stack_Size = 1000000;
         private const int Fill_Digit = 1;
-        private static readonly object syncronized_object = new Object();
         static void Main(string[] args)
         {
 	        HelpTask1();
@@ -73,11 +73,10 @@ namespace lab4
             Console.WriteLine("----------Calculating F2----------");
             MC = (MA.Transpose()*MB).Sort();
 #if Print
-            lock (syncronized_object)
-            {
+	        pool.WaitOne();
                 Console.WriteLine("F2 = ");
-                MC.Print();   
-            }
+                MC.Print();
+	        pool.Release();
 #endif
             Console.WriteLine("Task2 finished");
         }
@@ -100,11 +99,10 @@ namespace lab4
             Console.WriteLine("----------Calculating F3----------");
             D = (A + M).Sort()*(MC*MM).Transpose();
 #if Print
-            lock (syncronized_object)
-            {
+	        pool.WaitOne();
                 Console.Write("F3 = ");
-                D.Print();   
-            }
+                D.Print();
+	        pool.Release();
 #endif
             Console.WriteLine("Task3 finished");
         }
