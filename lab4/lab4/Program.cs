@@ -14,6 +14,7 @@
 
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace lab4
 {
@@ -25,46 +26,39 @@ namespace lab4
         private static readonly object syncronized_object = new Object();
         static void Main(string[] args)
         {
-            Thread t1 = new Thread(Task1, Stack_Size) { Name = "T1", Priority = ThreadPriority.Normal };
-            Thread t2 = new Thread(Task2, Stack_Size) { Name = "T2", Priority = ThreadPriority.Normal };
+	        HelpTask1();
+	        Task.Factory.StartNew(Task2);
             Thread t3 = new Thread(Task3, Stack_Size) { Name = "T3", Priority = ThreadPriority.Normal };
-            t1.Start();
-            t2.Start();
             t3.Start();
-            t1.Join();
-            t2.Join();
             t3.Join();
             Console.ReadLine();
         }
         
-        private static void Task1()
+        private static Task<int> Task1()
         {
-            Console.WriteLine("Task1 started");
-            Vector A = new Vector(Size),
-                B = new Vector(Size),
-                C = new Vector(Size);
-            Matrix MA = new Matrix(Size),
-                MZ = new Matrix(Size);
-            Console.WriteLine("Generating vector A ...");
-            A.Generate(Fill_Digit);
-            Console.WriteLine("Generating vector B ...");
-            B.Generate(Fill_Digit);
-            Console.WriteLine("Generating vector C ...");
-            C.Generate(Fill_Digit);
-            Console.WriteLine("Generating matrix MA ...");
-            MA.Generate(Fill_Digit);
-            Console.WriteLine("Generating matrix MZ ...");
-            MZ.Generate(Fill_Digit);
-            Console.WriteLine("----------Calculating F1----------");
-            int d = (B*C) + (A*B) + (C*(B*(MA*MZ)));
-#if Print
-            lock (syncronized_object)
-            {
-                Console.WriteLine("F1 = {0}",d);   
-            }
-#endif
-
-            Console.WriteLine("Task1 finished");
+			return Task.Run(() =>
+			{
+				Console.WriteLine("Task1 started");
+				Vector A = new Vector(Size),
+					B = new Vector(Size),
+					C = new Vector(Size);
+				Matrix MA = new Matrix(Size),
+					MZ = new Matrix(Size);
+				Console.WriteLine("Generating vector A ...");
+				A.Generate(Fill_Digit);
+				Console.WriteLine("Generating vector B ...");
+				B.Generate(Fill_Digit);
+				Console.WriteLine("Generating vector C ...");
+				C.Generate(Fill_Digit);
+				Console.WriteLine("Generating matrix MA ...");
+				MA.Generate(Fill_Digit);
+				Console.WriteLine("Generating matrix MZ ...");
+				MZ.Generate(Fill_Digit);
+				Console.WriteLine("----------Calculating F1----------");
+				int d = (B*C) + (A*B) + (C*(B*(MA*MZ)));
+				Console.WriteLine("Task1 finished");
+				return d;
+			});
         }
 
         private static void Task2()
@@ -114,5 +108,11 @@ namespace lab4
 #endif
             Console.WriteLine("Task3 finished");
         }
+
+	    private static async void HelpTask1()
+	    {
+		    int result = await Task1();
+		    Console.WriteLine("d = {0}", result);
+	    }
     }
 }
