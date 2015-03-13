@@ -37,12 +37,4 @@
 *.user
 
 #folders
-/lab4/lab4/bin/**
-/lab4/lab4/obj/**
-/lab4/lab4/Properties/**
-/lab5/lab5/Debug/**
-/lab5/Debug/**
-/lab6/Debug/**
-/lab6/lab6/Debug/**
-/lab7/Debug/**
-/lab7/lab7/Debug/**
+**/Debug/**
