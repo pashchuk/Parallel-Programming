@@ -28,7 +28,7 @@ Matrix MO(N), MK(N), MX(N);
 
 HANDLE S1, S2;
 HANDLE M;
-HANDLE E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12;
+HANDLE E1, E2, E3, E4, E5, E6, E7, E8, E10, E11, E12;
 CRITICAL_SECTION CrSec;
 
 void t1() {
@@ -314,7 +314,6 @@ int main() {
 	E6 = CreateEvent(NULL, 1, 0, NULL);
 	E7 = CreateEvent(NULL, 1, 0, NULL);
 	E8 = CreateEvent(NULL, 1, 0, NULL);
-	E9 = CreateEvent(NULL, 1, 0, NULL);
 	E10 = CreateEvent(NULL, 1, 0, NULL);
 	E11 = CreateEvent(NULL, 1, 0, NULL);
 	E12 = CreateEvent(NULL, 1, 0, NULL);
@@ -341,7 +340,6 @@ int main() {
 	CloseHandle(E6);
 	CloseHandle(E7);
 	CloseHandle(E8);
-	CloseHandle(E9);
 	CloseHandle(E10);
 	CloseHandle(E11);
 	CloseHandle(E12);
