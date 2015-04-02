@@ -28,7 +28,7 @@ Matrix MO(N), MK(N), MX(N);
 
 HANDLE S1, S2;
 HANDLE M;
-HANDLE E1, E2, E3, E4, E5, E6, E7, E8, E10, E11, E12;
+HANDLE E1, E2, E3, E4, E5, E6, E7;
 CRITICAL_SECTION CrSec;
 
 void t1() {
@@ -49,41 +49,26 @@ void t1() {
 	Matrix MK1(N);
 	MK1.copy(MK);
 	ReleaseMutex(M);
-	//Знаходження MXh = MOh * MK1
-	for (int i = processID*H; i < processID*H + H; i++)
-	for (int j = 0; j < MK1.SIZE; j++)
-	{
-		int sum = 0;
-		for (int k = 0; k < MK1.SIZE; k++)
-			sum += MO.matrix[i][k] * MK1.matrix[k][j];
-		MX.matrix[i][j] = sum;
-	}
-	//Сигнал потокам Т2, Т3, Т4 про завершення рахування MX
-	SetEvent(E1);
-
-	//Очікування завершення рахування MX у потоках T2, T3, T4
-	WaitForSingleObject(E2, INFINITE);
-	WaitForSingleObject(E3, INFINITE);
-	WaitForSingleObject(E4, INFINITE);
 
 	//Знаходження Zh(1) = sort(Bh)
 	bubblesort(B.vector + (processID*H), H);
 
 	//Очікування завершення сортування Zh(2) у потоці Т2
-	WaitForSingleObject(E5, INFINITE);
+	WaitForSingleObject(E2, INFINITE);
 
 	//Знаходження Z2h(i) = merge(Zh(1), Zh(2))
 	merge(B.vector, B.vector + H, H, H, Z.vector);
 	std::memcpy(B.vector, Z.vector, 8 * H);
 
 	//Очікування завершення сортування Z2h(2) у потоці Т3
-	WaitForSingleObject(E7, INFINITE);
+	WaitForSingleObject(E3, INFINITE);
 
 	//Знаходження Z = merge(Z2h(1), Z2h(2))
 	merge(B.vector, B.vector + 2 * H, 2 * H, 2 * H, Z.vector);
+	std::memcpy(B.vector, Z.vector, 16 * H);
 
 	//Сигнал про завершення сортування потокам Т2, Т3, Т4
-	SetEvent(E8);
+	SetEvent(E1);
 
 	//Копіювання C1 = C
 	EnterCriticalSection(&CrSec);
@@ -91,19 +76,24 @@ void t1() {
 	C1.copy(C);
 	LeaveCriticalSection(&CrSec);
 
-	//Знаходження Ah = Zh * alpha1 + beta1 * C1 * MXh
+	//Знаходження Ah = Zh * alpha1 + beta1 * C1 * (MX * MK1h)
 	for (int i = processID*H; i < processID*H + H; i++)
 	{
-		int res = 0;
-		for (int j = 0; j < Z.SIZE; j++)
-			res += C1.vector[j] * MX.matrix[j][i];
-		A.vector[i] = Z.vector[i] * a1 + b1*res;
+		int currElement = 0;
+		for (int j = 0; j < N; j++)
+		{
+			int sum = 0;
+			for (int k = 0; k < N; k++)
+				sum += MO.matrix[j][k] * MK1.matrix[k][i];
+			currElement += C1.vector[j] * sum;
+		}
+		A.vector[i] = B.vector[i] * a1 + b1*currElement;
 	}
 
 	//Очікування завершення обчислень у потоках T2, T3, T4
-	WaitForSingleObject(E10, INFINITE);
-	WaitForSingleObject(E11, INFINITE);
-	WaitForSingleObject(E12, INFINITE);
+	WaitForSingleObject(E5, INFINITE);
+	WaitForSingleObject(E6, INFINITE);
+	WaitForSingleObject(E7, INFINITE);
 	A.print();
 	printf("t1 finished!!!\n");
 }
@@ -122,31 +112,15 @@ void t2() {
 	Matrix MK2(N);
 	MK2.copy(MK);
 	ReleaseMutex(M);
-	//Знаходження MXh = MOh * MK2
-	for (int i = processID*H; i < processID*H + H; i++)
-	for (int j = 0; j < MK2.SIZE; j++)
-	{
-		int sum = 0;
-		for (int k = 0; k < MK2.SIZE; k++)
-			sum += MO.matrix[i][k] * MK2.matrix[k][j];
-		MX.matrix[i][j] = sum;
-	}
-	//Сигнал потокам Т1, Т3, Т4 про завершення рахування MX
-	SetEvent(E2);
-
-	//Очікування завершення рахування MX у потоках T1, T3, T4
-	WaitForSingleObject(E1, INFINITE);
-	WaitForSingleObject(E3, INFINITE);
-	WaitForSingleObject(E4, INFINITE);
 
 	//Знаходження Zh(2) = sort(Bh)
 	bubblesort(B.vector + (processID*H), H);
 
 	//Сигнал про завершення сортування Zh(2) потоку Т1
-	SetEvent(E5);
+	SetEvent(E2);
 
 	//Очікування завершення сортування у потоці Т1
-	WaitForSingleObject(E8, INFINITE);
+	WaitForSingleObject(E1, INFINITE);
 
 	//Копіювання C2 = C
 	EnterCriticalSection(&CrSec);
@@ -154,17 +128,22 @@ void t2() {
 	C2.copy(C);
 	LeaveCriticalSection(&CrSec);
 
-	//Знаходження Ah = Zh * alpha2 + beta2 * C2 * MXh
+	//Знаходження Ah = Zh * alpha1 + beta1 * C1 * (MX * MK1h)
 	for (int i = processID*H; i < processID*H + H; i++)
 	{
-		int res = 0;
-		for (int j = 0; j < Z.SIZE; j++)
-			res += C2.vector[j] * MX.matrix[j][i];
-		A.vector[i] = Z.vector[i] * a2 + b2*res;
+		int currElement = 0;
+		for (int j = 0; j < N; j++)
+		{
+			int sum = 0;
+			for (int k = 0; k < N; k++)
+				sum += MO.matrix[j][k] * MK2.matrix[k][i];
+			currElement += C2.vector[j] * sum;
+		}
+		A.vector[i] = B.vector[i] * a2 + b2*currElement;
 	}
 
 	//Сигнал про завершення обчислень потоку T1
-	SetEvent(E10);
+	SetEvent(E5);
 	printf("t2 finished!!!\n");
 }
 
@@ -182,38 +161,22 @@ void t3() {
 	Matrix MK3(N);
 	MK3.copy(MK);
 	ReleaseMutex(M);
-	//Знаходження MXh = MOh * MK3
-	for (int i = processID*H; i < processID*H + H; i++)
-	for (int j = 0; j < MK3.SIZE; j++)
-	{
-		int sum = 0;
-		for (int k = 0; k < MK3.SIZE; k++)
-			sum += MO.matrix[i][k] * MK3.matrix[k][j];
-		MX.matrix[i][j] = sum;
-	}
-	//Сигнал потокам Т1, Т2, Т4 про завершення рахування MX
-	SetEvent(E3);
-
-	//Очікування завершення рахування MX у потоках T1, T2, T4
-	WaitForSingleObject(E1, INFINITE);
-	WaitForSingleObject(E2, INFINITE);
-	WaitForSingleObject(E4, INFINITE);
 
 	//Знаходження Zh(3) = sort(Bh)
 	bubblesort(B.vector + (processID*H), H);
 
 	//Очікування завершення сортування Zh(4) у потоці Т4
-	WaitForSingleObject(E6, INFINITE);
+	WaitForSingleObject(E4, INFINITE);
 
 	//Знаходження Z2h(2) = merge(Zh(3), Zh(4))
 	merge(B.vector + 2 * H, B.vector + 3 * H, H, H, Z.vector + 2 * H);
 	std::memcpy(B.vector + 2 * H, Z.vector + 2 * H, 8 * H);
 
 	//Сигнал про завершення сортування Z2h(2) потоку Т1
-	SetEvent(E7);
+	SetEvent(E3);
 
 	//Очікування завершення сортування у потоці Т1
-	WaitForSingleObject(E8, INFINITE);
+	WaitForSingleObject(E1, INFINITE);
 
 	//Копіювання C3 = C
 	EnterCriticalSection(&CrSec);
@@ -221,17 +184,22 @@ void t3() {
 	C3.copy(C);
 	LeaveCriticalSection(&CrSec);
 
-	//Знаходження Ah = Zh * alpha3 + beta3 * C3 * MXh
+	//Знаходження Ah = Zh * alpha1 + beta1 * C1 * (MX * MK1h)
 	for (int i = processID*H; i < processID*H + H; i++)
 	{
-		int res = 0;
-		for (int j = 0; j < Z.SIZE; j++)
-			res += C3.vector[j] * MX.matrix[j][i];
-		A.vector[i] = Z.vector[i] * a3 + b3*res;
+		int currElement = 0;
+		for (int j = 0; j < N; j++)
+		{
+			int sum = 0;
+			for (int k = 0; k < N; k++)
+				sum += MO.matrix[j][k] * MK3.matrix[k][i];
+			currElement += C3.vector[j] * sum;
+		}
+		A.vector[i] = B.vector[i] * a3 + b3*currElement;
 	}
 
 	//Сигнал про завершення обчислень потоку T1
-	SetEvent(E11);
+	SetEvent(E6);
 	printf("t3 finished!!!\n");
 }
 
@@ -255,31 +223,15 @@ void t4() {
 	Matrix MK4(N);
 	MK4.copy(MK);
 	ReleaseMutex(M);
-	//Знаходження MXh = MOh * MK4
-	for (int i = processID*H; i < processID*H + H; i++)
-	for (int j = 0; j < MK4.SIZE; j++)
-	{
-		int sum = 0;
-		for (int k = 0; k < MK4.SIZE; k++)
-			sum += MO.matrix[i][k] * MK4.matrix[k][j];
-		MX.matrix[i][j] = sum;
-	}
-	//Сигнал потокам Т1, Т2, Т3 про завершення рахування MX
-	SetEvent(E4);
-
-	//Очікування завершення рахування MX у потоках T1, T2, T3
-	WaitForSingleObject(E1, INFINITE);
-	WaitForSingleObject(E2, INFINITE);
-	WaitForSingleObject(E3, INFINITE);
 
 	//Знаходження Zh(4) = sort(Bh)
 	bubblesort(B.vector + (processID*H), H);
 
 	//Сигнал про завершення сортування Zh(4) потоку Т3
-	SetEvent(E6);
+	SetEvent(E4);
 
 	//Очікування завершення сортування у потоці Т1
-	WaitForSingleObject(E8, INFINITE);
+	WaitForSingleObject(E1, INFINITE);
 
 	//Копіювання C4 = C
 	EnterCriticalSection(&CrSec);
@@ -287,17 +239,22 @@ void t4() {
 	C4.copy(C);
 	LeaveCriticalSection(&CrSec);
 
-	//Знаходження Ah = Zh * alpha4 + beta4 * C4 * MXh
+	//Знаходження Ah = Zh * alpha1 + beta1 * C1 * (MX * MK1h)
 	for (int i = processID*H; i < processID*H + H; i++)
 	{
-		int res = 0;
-		for (int j = 0; j < Z.SIZE; j++)
-			res += C4.vector[j] * MX.matrix[j][i];
-		A.vector[i] = Z.vector[i] * a4 + b4*res;
+		int currElement = 0;
+		for (int j = 0; j < N; j++)
+		{
+			int sum = 0;
+			for (int k = 0; k < N; k++)
+				sum += MO.matrix[j][k] * MK4.matrix[k][i];
+			currElement += C4.vector[j] * sum;
+		}
+		A.vector[i] = B.vector[i] * a4 + b4*currElement;
 	}
 
 	//Сигнал про завершення обчислень потоку T1
-	SetEvent(E12);
+	SetEvent(E7);
 	printf("t4 finished!!!\n");
 }
 
@@ -313,10 +270,6 @@ int main() {
 	E5 = CreateEvent(NULL, 1, 0, NULL);
 	E6 = CreateEvent(NULL, 1, 0, NULL);
 	E7 = CreateEvent(NULL, 1, 0, NULL);
-	E8 = CreateEvent(NULL, 1, 0, NULL);
-	E10 = CreateEvent(NULL, 1, 0, NULL);
-	E11 = CreateEvent(NULL, 1, 0, NULL);
-	E12 = CreateEvent(NULL, 1, 0, NULL);
 
 	HANDLE T1 = CreateThread(NULL, 10000, (LPTHREAD_START_ROUTINE)t1, NULL, 0, NULL);
 	HANDLE T2 = CreateThread(NULL, 10000, (LPTHREAD_START_ROUTINE)t2, NULL, 0, NULL);
@@ -339,10 +292,6 @@ int main() {
 	CloseHandle(E5);
 	CloseHandle(E6);
 	CloseHandle(E7);
-	CloseHandle(E8);
-	CloseHandle(E10);
-	CloseHandle(E11);
-	CloseHandle(E12);
 	DeleteCriticalSection(&CrSec);
 
 	return 0;
