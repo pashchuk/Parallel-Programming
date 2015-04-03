@@ -46,8 +46,8 @@ void t1() {
 	WaitForSingleObject(M, INFINITE);
 	int a1 = alpha;
 	int b1 = beta;
-	Matrix MK1(N);
-	MK1.copy(MK);
+	Matrix MO1(N);
+	MO1.copy(MO);
 	ReleaseMutex(M);
 
 	//Знаходження Zh(1) = sort(Bh)
@@ -76,7 +76,7 @@ void t1() {
 	C1.copy(C);
 	LeaveCriticalSection(&CrSec);
 
-	//Знаходження Ah = Zh * alpha1 + beta1 * C1 * (MX * MK1h)
+	//Знаходження Ah = Zh * alpha1 + beta1 * C1 * (MO1 * MKh)
 	for (int i = processID*H; i < processID*H + H; i++)
 	{
 		int currElement = 0;
@@ -84,7 +84,7 @@ void t1() {
 		{
 			int sum = 0;
 			for (int k = 0; k < N; k++)
-				sum += MO.matrix[j][k] * MK1.matrix[k][i];
+				sum += MO1.matrix[j][k] * MK.matrix[k][i];
 			currElement += C1.vector[j] * sum;
 		}
 		A.vector[i] = B.vector[i] * a1 + b1*currElement;
@@ -109,8 +109,8 @@ void t2() {
 	WaitForSingleObject(M, INFINITE);
 	int a2 = alpha;
 	int b2 = beta;
-	Matrix MK2(N);
-	MK2.copy(MK);
+	Matrix MO2(N);
+	MO2.copy(MO);
 	ReleaseMutex(M);
 
 	//Знаходження Zh(2) = sort(Bh)
@@ -128,7 +128,7 @@ void t2() {
 	C2.copy(C);
 	LeaveCriticalSection(&CrSec);
 
-	//Знаходження Ah = Zh * alpha1 + beta1 * C1 * (MX * MK1h)
+	//Знаходження Ah = Zh * alpha2 + beta2 * C2 * (MO2 * MKh)
 	for (int i = processID*H; i < processID*H + H; i++)
 	{
 		int currElement = 0;
@@ -136,7 +136,7 @@ void t2() {
 		{
 			int sum = 0;
 			for (int k = 0; k < N; k++)
-				sum += MO.matrix[j][k] * MK2.matrix[k][i];
+				sum += MO2.matrix[j][k] * MK.matrix[k][i];
 			currElement += C2.vector[j] * sum;
 		}
 		A.vector[i] = B.vector[i] * a2 + b2*currElement;
@@ -158,8 +158,8 @@ void t3() {
 	WaitForSingleObject(M, INFINITE);
 	int a3 = alpha;
 	int b3 = beta;
-	Matrix MK3(N);
-	MK3.copy(MK);
+	Matrix MO3(N);
+	MO3.copy(MO);
 	ReleaseMutex(M);
 
 	//Знаходження Zh(3) = sort(Bh)
@@ -184,7 +184,7 @@ void t3() {
 	C3.copy(C);
 	LeaveCriticalSection(&CrSec);
 
-	//Знаходження Ah = Zh * alpha1 + beta1 * C1 * (MX * MK1h)
+	//Знаходження Ah = Zh * alpha3 + beta3 * C3 * (MO3 * MKh)
 	for (int i = processID*H; i < processID*H + H; i++)
 	{
 		int currElement = 0;
@@ -192,7 +192,7 @@ void t3() {
 		{
 			int sum = 0;
 			for (int k = 0; k < N; k++)
-				sum += MO.matrix[j][k] * MK3.matrix[k][i];
+				sum += MO3.matrix[j][k] * MK.matrix[k][i];
 			currElement += C3.vector[j] * sum;
 		}
 		A.vector[i] = B.vector[i] * a3 + b3*currElement;
@@ -220,8 +220,8 @@ void t4() {
 	WaitForSingleObject(M, INFINITE);
 	int a4 = alpha;
 	int b4 = beta;
-	Matrix MK4(N);
-	MK4.copy(MK);
+	Matrix MO4(N);
+	MO4.copy(MO);
 	ReleaseMutex(M);
 
 	//Знаходження Zh(4) = sort(Bh)
@@ -239,7 +239,7 @@ void t4() {
 	C4.copy(C);
 	LeaveCriticalSection(&CrSec);
 
-	//Знаходження Ah = Zh * alpha1 + beta1 * C1 * (MX * MK1h)
+	//Знаходження Ah = Zh * alpha4 + beta4 * C4 * (MO4 * MKh)
 	for (int i = processID*H; i < processID*H + H; i++)
 	{
 		int currElement = 0;
@@ -247,7 +247,7 @@ void t4() {
 		{
 			int sum = 0;
 			for (int k = 0; k < N; k++)
-				sum += MO.matrix[j][k] * MK4.matrix[k][i];
+				sum += MO4.matrix[j][k] * MK.matrix[k][i];
 			currElement += C4.vector[j] * sum;
 		}
 		A.vector[i] = B.vector[i] * a4 + b4*currElement;
