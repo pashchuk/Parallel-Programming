@@ -65,6 +65,15 @@ namespace lab3
 				for (int j = 0; j < Columns; j++)
 					_matrix[i, j] = fillElement;
 		}
+
+		public Matrix<T> Copy()
+		{
+			var result = new Matrix<T>(Rows, Columns);
+			for(int i = 0; i < Rows; i++)
+				for (int j = 0; j < Columns; j++)
+					result[i, j] = _matrix[i, j];
+			return result;
+		}
 		#endregion
 	}
 }
