@@ -49,60 +49,6 @@ namespace lab3
 
 		#region public Methods
 
-		public void SwapRows(int row1, int row2)
-		{
-			T tempvariable;
-			for (int i = 0; i < Columns; i++)
-			{
-				tempvariable = _matrix[row1, i];
-				_matrix[row1, i] = _matrix[row2, i];
-				_matrix[row2, i] = tempvariable;
-			}
-		}
-		public void SwapColumns(int column1, int column2)
-		{
-			T tempvariable;
-			for (int i = 0; i < Rows; i++)
-			{
-				tempvariable = _matrix[i, column1];
-				_matrix[i, column1] = _matrix[i, column2];
-				_matrix[i, column2] = tempvariable;
-			}
-		}
-
-		public int MaxInRow(int row)
-		{
-			throw new NotImplementedException();
-		}
-		public int MaxInRow(int row, out T maxValue)
-		{
-			throw new NotImplementedException();
-		}
-		public int MinInRow(int row)
-		{
-			throw new NotImplementedException();
-		}
-		public int MinInRow(int row, out T minValue)
-		{
-			throw new NotImplementedException();
-		}
-		public int MaxInColumn(int column)
-		{
-			throw new NotImplementedException();
-		}
-		public int MaxInColumn(int column, out T maxValue)
-		{
-			throw new NotImplementedException();
-		}
-		public int MinInColumn(int column)
-		{
-			throw new NotImplementedException();
-		}
-		public int MinInColumn(int column, out T minValue)
-		{
-			throw new NotImplementedException();
-		}
-
 		public void Print(TextWriter writer)
 		{
 			for (int i = 0; i < Rows; i++)
@@ -112,27 +58,6 @@ namespace lab3
 				writer.WriteLine();
 			}
 		}
-
-		public T[,] GetMatrixPointer()
-		{
-			return _matrix;
-		}
-		public bool CheckOnSymetric()
-		{
-			for(int i = 0; i < Rows; i++)
-				for (int j = 0; j < Columns; j++)
-				{
-					if (i == j) continue;
-					if (!_matrix[i, j].Equals(_matrix[j, i])) return false;
-				}
-			return true;
-		}
-		#endregion
-
-		#region Events
-
-
-
 		#endregion
 	}
 }
