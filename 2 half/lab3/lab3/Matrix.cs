@@ -58,6 +58,13 @@ namespace lab3
 				writer.WriteLine();
 			}
 		}
+
+		public void Fill(T fillElement)
+		{
+			for(int i = 0; i < Rows; i++)
+				for (int j = 0; j < Columns; j++)
+					_matrix[i, j] = fillElement;
+		}
 		#endregion
 	}
 }
