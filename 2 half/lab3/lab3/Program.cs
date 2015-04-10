@@ -102,23 +102,8 @@ namespace lab3
 
 		public static void Main(string[] args)
 		{
-			var a = new Vector<int>(6);
-			a[0] = 5;
-			a[1] = 3;
-			a[2] = 2;
-			a[3] = 7;
-			a[4] = 4;
-			a[5] = 5;
-			var b = new Vector<int>(4);
-			var c = new Vector<int>(10);
-			b.Fill(3);
-			BubbleSort(a, 3, 3);
-			BubbleSort(a, 0, 3);
-			BubbleSort(b, 0, 2);
-			Merge(a,ref c, 0, 3, 3, 3);
 			var program = new Program();
 			program.Start();
-			Console.ReadLine();
 		}
 
 		void t1()
@@ -196,10 +181,10 @@ namespace lab3
 			S2.WaitOne();
 
 			//Копіювання аlpha, beta, МO
-			var a1 = alpha;
-			var b1 = beta;
+			var a2 = alpha;
+			var b2 = beta;
 			M.WaitOne();
-			var MO1 = MO.Copy();
+			var MO2 = MO.Copy();
 			M.ReleaseMutex();
 
 			//Знаходження Zh(2) = sort(Bh)
@@ -211,14 +196,14 @@ namespace lab3
 			//Очікування завершення сортування у потоці Т1
 			E6.WaitOne();
 
-			//Копіювання C1 = C
-			Vector<int> C1;
+			//Копіювання C2 = C
+			Vector<int> C2;
 			lock (_lock)
 			{
-				C1 = C.Copy();
+				C2 = C.Copy();
 			}
 
-			//Знаходження Ah = Zh * alpha1 + beta1 * C1 * (MO1 * MKh)
+			//Знаходження Ah = Zh * alpha2 + beta2 * C2 * (MO2 * MKh)
 			for (int i = processID * H; i < processID * H + H; i++)
 			{
 				int currElement = 0;
@@ -226,10 +211,10 @@ namespace lab3
 				{
 					int sum = 0;
 					for (int k = 0; k < N; k++)
-						sum += MO1[j, k] * MK[k, i];
-					currElement += C1[j] * sum;
+						sum += MO2[j, k] * MK[k, i];
+					currElement += C2[j] * sum;
 				}
-				A[i] = B[i] * a1 + b1 * currElement;
+				A[i] = B[i] * a2 + b2 * currElement;
 			}
 
 			//Сигнал про завершення обчислень потоку Т1
@@ -246,13 +231,13 @@ namespace lab3
 			S2.WaitOne();
 
 			//Копіювання аlpha, beta, МO
-			var a1 = alpha;
-			var b1 = beta;
+			var a3 = alpha;
+			var b3 = beta;
 			M.WaitOne();
-			var MO1 = MO.Copy();
+			var MO3 = MO.Copy();
 			M.ReleaseMutex();
 
-			//Знаходження Zh(1) = sort(Bh)
+			//Знаходження Zh(3) = sort(Bh)
 			BubbleSort(B, processID * H, H);
 
 			//Очікування завершення сортування Zh(4) у потоці Т4
@@ -275,14 +260,14 @@ namespace lab3
 			//Очікування завершення сортування у потоці Т1
 			E6.WaitOne();
 
-			//Копіювання C1 = C
-			Vector<int> C1;
+			//Копіювання C3 = C
+			Vector<int> C3;
 			lock (_lock)
 			{
-				C1 = C.Copy();
+				C3 = C.Copy();
 			}
 
-			//Знаходження Ah = Zh * alpha1 + beta1 * C1 * (MO1 * MKh)
+			//Знаходження Ah = Zh * alpha3 + beta3 * C3 * (MO3 * MKh)
 			for (int i = processID * H; i < processID * H + H; i++)
 			{
 				int currElement = 0;
@@ -290,10 +275,10 @@ namespace lab3
 				{
 					int sum = 0;
 					for (int k = 0; k < N; k++)
-						sum += MO1[j, k] * MK[k, i];
-					currElement += C1[j] * sum;
+						sum += MO3[j, k] * MK[k, i];
+					currElement += C3[j] * sum;
 				}
-				A[i] = B[i] * a1 + b1 * currElement;
+				A[i] = B[i] * a3 + b3 * currElement;
 			}
 
 			//Сигнал про завершення обчислень потоку Т1
@@ -314,10 +299,10 @@ namespace lab3
 			//Чекати на закінчення вводу в потоку Т1
 			S1.WaitOne();
 			//Копіювання аlpha, beta, МO
-			var a1 = alpha;
-			var b1 = beta;
+			var a4 = alpha;
+			var b4 = beta;
 			M.WaitOne();
-			var MO1 = MO.Copy();
+			var MO4 = MO.Copy();
 			M.ReleaseMutex();
 
 			//Знаходження Zh(4) = sort(Bh)
@@ -329,14 +314,14 @@ namespace lab3
 			//Очікування завершення сортування у потоці Т1
 			E6.WaitOne();
 
-			//Копіювання C1 = C
-			Vector<int> C1;
+			//Копіювання C4 = C
+			Vector<int> C4;
 			lock (_lock)
 			{
-				C1 = C.Copy();
+				C4 = C.Copy();
 			}
 
-			//Знаходження Ah = Zh * alpha1 + beta1 * C1 * (MO1 * MKh)
+			//Знаходження Ah = Zh * alpha4 + beta4 * C4 * (MO4 * MKh)
 			for (int i = processID * H; i < processID * H + H; i++)
 			{
 				int currElement = 0;
@@ -344,10 +329,10 @@ namespace lab3
 				{
 					int sum = 0;
 					for (int k = 0; k < N; k++)
-						sum += MO1[j, k] * MK[k, i];
-					currElement += C1[j] * sum;
+						sum += MO4[j, k] * MK[k, i];
+					currElement += C4[j] * sum;
 				}
-				A[i] = B[i] * a1 + b1 * currElement;
+				A[i] = B[i] * a4 + b4 * currElement;
 			}
 
 			//Сигнал про завершення обчислень потоку Т1
@@ -364,13 +349,13 @@ namespace lab3
 			S2.WaitOne();
 
 			//Копіювання аlpha, beta, МO
-			var a1 = alpha;
-			var b1 = beta;
+			var a5 = alpha;
+			var b5 = beta;
 			M.WaitOne();
-			var MO1 = MO.Copy();
+			var MO5 = MO.Copy();
 			M.ReleaseMutex();
 
-			//Знаходження Zh(1) = sort(Bh)
+			//Знаходження Zh(5) = sort(Bh)
 			BubbleSort(B, processID * H, H);
 
 			//Очікування завершення сортування Zh(6) у потоці Т6
@@ -386,14 +371,14 @@ namespace lab3
 			//Очікування завершення сортування у потоці Т1
 			E6.WaitOne();
 
-			//Копіювання C1 = C
-			Vector<int> C1;
+			//Копіювання C5 = C
+			Vector<int> C5;
 			lock (_lock)
 			{
-				C1 = C.Copy();
+				C5 = C.Copy();
 			}
 
-			//Знаходження Ah = Zh * alpha1 + beta1 * C1 * (MO1 * MKh)
+			//Знаходження Ah = Zh * alpha5 + beta5 * C5 * (MO5 * MKh)
 			for (int i = processID * H; i < processID * H + H; i++)
 			{
 				int currElement = 0;
@@ -401,10 +386,10 @@ namespace lab3
 				{
 					int sum = 0;
 					for (int k = 0; k < N; k++)
-						sum += MO1[j, k] * MK[k, i];
-					currElement += C1[j] * sum;
+						sum += MO5[j, k] * MK[k, i];
+					currElement += C5[j] * sum;
 				}
-				A[i] = B[i] * a1 + b1 * currElement;
+				A[i] = B[i] * a5 + b5 * currElement;
 			}
 
 			//Сигнал про завершення обчислень потоку Т1
@@ -421,10 +406,10 @@ namespace lab3
 			S2.WaitOne();
 
 			//Копіювання аlpha, beta, МO
-			var a1 = alpha;
-			var b1 = beta;
+			var a6 = alpha;
+			var b6 = beta;
 			M.WaitOne();
-			var MO1 = MO.Copy();
+			var MO6 = MO.Copy();
 			M.ReleaseMutex();
 
 			//Знаходження Zh(6) = sort(Bh)
@@ -436,14 +421,14 @@ namespace lab3
 			//Очікування завершення сортування у потоці Т1
 			E6.WaitOne();
 
-			//Копіювання C1 = C
-			Vector<int> C1;
+			//Копіювання C6 = C
+			Vector<int> C6;
 			lock (_lock)
 			{
-				C1 = C.Copy();
+				C6 = C.Copy();
 			}
 
-			//Знаходження Ah = Zh * alpha1 + beta1 * C1 * (MO1 * MKh)
+			//Знаходження Ah = Zh * alpha6 + beta6 * C6 * (MO6 * MKh)
 			for (int i = processID * H; i < processID * H + H; i++)
 			{
 				int currElement = 0;
@@ -451,10 +436,10 @@ namespace lab3
 				{
 					int sum = 0;
 					for (int k = 0; k < N; k++)
-						sum += MO1[j, k] * MK[k, i];
-					currElement += C1[j] * sum;
+						sum += MO6[j, k] * MK[k, i];
+					currElement += C6[j] * sum;
 				}
-				A[i] = B[i] * a1 + b1 * currElement;
+				A[i] = B[i] * a6 + b6 * currElement;
 			}
 
 			//Сигнал про завершення обчислень потоку Т1
