@@ -110,8 +110,9 @@ namespace lab3
 			//Чекати на закінчення вводу в потоку Т4
 			S2.WaitOne();
 			//Копіювання аlpha, beta, МO
-			var a1 = alpha;
-			var b1 = beta;
+			int a1 = 0, b1 = 0;
+			Interlocked.Exchange(ref a1, alpha);
+			Interlocked.Exchange(ref b1, alpha);
 			M.WaitOne();
 			var MO1 = MO.Copy();
 			M.ReleaseMutex();
@@ -173,8 +174,9 @@ namespace lab3
 			S2.WaitOne();
 
 			//Копіювання аlpha, beta, МO
-			var a2 = alpha;
-			var b2 = beta;
+			int a2 = 0, b2 = 0;
+			Interlocked.Exchange(ref a2, alpha);
+			Interlocked.Exchange(ref b2, alpha);
 			M.WaitOne();
 			var MO2 = MO.Copy();
 			M.ReleaseMutex();
@@ -223,8 +225,9 @@ namespace lab3
 			S2.WaitOne();
 
 			//Копіювання аlpha, beta, МO
-			var a3 = alpha;
-			var b3 = beta;
+			int a3 = 0, b3 = 0;
+			Interlocked.Exchange(ref a3, alpha);
+			Interlocked.Exchange(ref b3, alpha);
 			M.WaitOne();
 			var MO3 = MO.Copy();
 			M.ReleaseMutex();
@@ -291,8 +294,9 @@ namespace lab3
 			//Чекати на закінчення вводу в потоку Т1
 			S1.WaitOne();
 			//Копіювання аlpha, beta, МO
-			var a4 = alpha;
-			var b4 = beta;
+			int a4 = 0, b4 = 0;
+			Interlocked.Exchange(ref a4, alpha);
+			Interlocked.Exchange(ref b4, alpha);
 			M.WaitOne();
 			var MO4 = MO.Copy();
 			M.ReleaseMutex();
@@ -341,8 +345,9 @@ namespace lab3
 			S2.WaitOne();
 
 			//Копіювання аlpha, beta, МO
-			var a5 = alpha;
-			var b5 = beta;
+			int a5 = 0, b5 = 0;
+			Interlocked.Exchange(ref a5, alpha);
+			Interlocked.Exchange(ref b5, alpha);
 			M.WaitOne();
 			var MO5 = MO.Copy();
 			M.ReleaseMutex();
@@ -398,8 +403,9 @@ namespace lab3
 			S2.WaitOne();
 
 			//Копіювання аlpha, beta, МO
-			var a6 = alpha;
-			var b6 = beta;
+			int a6 = 0, b6 = 0;
+			Interlocked.Exchange(ref a6, alpha);
+			Interlocked.Exchange(ref b6, alpha);
 			M.WaitOne();
 			var MO6 = MO.Copy();
 			M.ReleaseMutex();
