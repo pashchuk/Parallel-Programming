@@ -1,13 +1,6 @@
 ﻿#define PRINT
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace lab3
@@ -18,7 +11,7 @@ namespace lab3
 		private const int N = 12, P = 6, H = N/P;
 
 		private Vector<int> A, B, C, Z;
-		private Matrix<int> MO, MK, MX;
+		private Matrix<int> MO, MK;
 		private volatile int alpha, beta;
 
 		private static object _lock = new object();
@@ -37,7 +30,6 @@ namespace lab3
 
 			MO = new Matrix<int>(N);
 			MK = new Matrix<int>(N);
-			MX = new Matrix<int>(N);
 
 			S1 = new Semaphore(0, 5);
 			S2 = new Semaphore(0, 5);
