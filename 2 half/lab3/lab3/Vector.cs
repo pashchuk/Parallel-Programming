@@ -47,7 +47,7 @@ namespace lab3
 		public void Print(TextWriter writer)
 		{
 			for (int i = 0; i < Length; i++)
-				writer.Write(string.Format("{0:0.000}  ", _vector[i]));
+				writer.Write(string.Format("{0}  ", _vector[i]));
 			writer.WriteLine();
 		}
 
