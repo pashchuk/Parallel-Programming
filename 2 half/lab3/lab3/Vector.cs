@@ -57,6 +57,20 @@ namespace lab3
 				_vector[i] = fillElement;
 		}
 
+		public void CopyTo(Vector<T> source, int sourceIndex, int destinationIndex, int length)
+		{
+			for (var i = destinationIndex; i < destinationIndex + length; i++)
+				_vector[i] = source[sourceIndex++];
+		}
+
+		public Vector<T> Copy()
+		{
+			var result = new Vector<T>(Length);
+			for (int i = 0; i < Length; i++)
+				result[i] = _vector[i];
+			return result;
+		}
+
 		#endregion
 	}
 }
