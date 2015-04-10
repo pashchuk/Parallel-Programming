@@ -1,5 +1,15 @@
 ﻿#define PRINT
 
+/*
+----------------------------------------
+-- Lab3                               --
+-- Pashchuk Eduard Fedorovich         --
+-- Group IP-22                        --
+-- A = sort(B)*alpha + beta*C*(MO*MK) --
+-- Data : 10.04.2015                  --
+----------------------------------------
+*/
+
 using System;
 using System.Threading;
 
