@@ -181,7 +181,9 @@ namespace lab3
 			}
 			//Очікування завершення обчислень у потоках T2, T3, T4, T5, T6
 			WaitHandle.WaitAll(new WaitHandle[] {E7, E8, E9, E10, E11});
+#if PRINT
 			A.Print(Console.Out);
+#endif
 			Console.WriteLine("T{0} finished!!!", processID + 1);
 		}
 		void t2()
