@@ -4,7 +4,6 @@
 -- Pashchuk Eduard Fedorovich      --
 -- Group IP-22
 -- A = B*(MO*MK) + alpha*(C*MD)*MR --
--- A = a*B + sort(Z) + b*E*(MO*MK) --
 -- Data : 16.04.2015               --
 -------------------------------------
 */
