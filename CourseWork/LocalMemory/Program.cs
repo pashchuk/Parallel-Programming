@@ -76,9 +76,13 @@ namespace LocalMemory
 
 		private void DoWork(int taskId)
 		{
-			if (taskId == 0) { firstTask(); return; }
-			if (taskId == _processCount - 1) { lastTask(); return; }
-			otherTasks(taskId);
+			if (_processCount <= 1) oneTask();
+			else
+			{
+				if (taskId == 0){ firstTask(); return; }
+				if (taskId == _processCount - 1){ lastTask(); return; }
+				otherTasks(taskId);
+			}
 		}
 		private void firstTask()
 		{
@@ -120,6 +124,26 @@ namespace LocalMemory
 			Console.WriteLine("Task {0,2:D} finished!!!", id+1);
 		}
 
+		private void oneTask()
+		{
+			Console.WriteLine("Task {0,2:D} started!!!", 1);
+			fill(MA);
+			fill(MB);
+			fill(T);
+			fill(MC);
+			fill(MK);
+			fill(E);
+			calculation(0);
+			Console.WriteLine("Task {0,2:D} finished!!!", 1);
+			for (int i = 0; i < MA.GetLength(0); i++)
+			{
+				for (int j = 0; j < MA.GetLength(1); j++)
+					Console.Write("{0}  ", MA[i, j]);
+				Console.WriteLine();
+			}
+
+		}
+
 		//MA = MB*MC*alpha + (E*T)*MK
 		private void calculation(int id)
 		{
@@ -131,13 +155,13 @@ namespace LocalMemory
 				alpha_copy = alpha;
 			}
 			int ET_sum = 0, ET_result_copy = 0;
-			for (int i = id*H; i < id*H + H; i++)
+			for (int i = getStart(id+1); i < getEnd(id+1); i++)
 				ET_sum += E[i]*T[i];
 			Interlocked.Add(ref ET_result, ET_sum);
 			_vectorMultiply[id].Set();
 			WaitHandle.WaitAll(_vectorMultiply);
 			Interlocked.Exchange(ref ET_result_copy, ET_result);
-			for (int i = id*H; i < id*H + H; i++)
+			for (int i = getStart(id+1); i < getEnd(id+1); i++)
 				for (int j = 0; j < N; j++)
 				{
 					int sum = 0;
@@ -168,6 +192,22 @@ namespace LocalMemory
 		{
 			for (int i = 0; i < vector.Length; i++)
 				vector[i] = 1;
+		}
+
+		int getStart(int number)
+		{
+			int h = N / P;
+			int h0 = N % P;
+			h0 = number <= h0 ? number - 1 : h0;
+			return (number - 1) * h + h0;
+		}
+
+		int getEnd(int number)
+		{
+			int h = N / P;
+			int h0 = N % P;
+			h0 = number <= h0 ? number : h0;
+			return number * h + h0;
 		}
 	}
 }
