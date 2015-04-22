@@ -1,3 +1,6 @@
+#ifndef __DATA_H__
+#define __DATA_H__
+
 class Vector {
 public:
 	int SIZE;
@@ -80,3 +83,5 @@ public:
 		}
 	}
 };
+
+#endif //__DATA_H__
