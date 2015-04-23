@@ -5,8 +5,6 @@ class Vector {
 public:
 	int SIZE;
 	int *vector;
-	Vector() {
-	}
 	Vector(int n) {
 		SIZE = n;
 		vector = new int[n];
@@ -41,6 +39,10 @@ public:
 			std::printf("\n");
 		}
 	}
+	~Vector()
+	{
+		delete[] vector;
+	}
 };
 
 class Matrix {
@@ -49,9 +51,9 @@ public:
 	int **matrix;
 	Matrix(int n) {
 		SIZE = n;
-		matrix = new int*[n];
+		int *tempArr = new int[n*n];
 		for (int i = 0; i < n; ++i) {
-			matrix[i] = new int[n];
+			matrix[i] = &tempArr[i*n];
 		}
 	}
 
@@ -81,6 +83,10 @@ public:
 			}
 			std::printf("\n");
 		}
+	}
+	~Matrix()
+	{
+		delete[] matrix[0];
 	}
 };
 
