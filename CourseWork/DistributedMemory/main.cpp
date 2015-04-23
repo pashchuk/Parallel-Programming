@@ -30,7 +30,8 @@ int main(int argc, char* argv[])
 
 void firstTask()
 {
-	
+	std::printf("Task %2d started!!!", 1);
+	std::printf("Task %2d finished!!!", 1);
 }
 
 void lastTask()
