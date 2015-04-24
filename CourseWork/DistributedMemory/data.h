@@ -51,6 +51,7 @@ public:
 	int **matrix;
 	Matrix(int n) {
 		SIZE = n;
+		matrix = new int*[n];
 		int *tempArr = new int[n*n];
 		for (int i = 0; i < n; ++i) {
 			matrix[i] = &tempArr[i*n];
@@ -87,6 +88,7 @@ public:
 	~Matrix()
 	{
 		delete[] matrix[0];
+		delete matrix;
 	}
 };
 
