@@ -1,7 +1,15 @@
-﻿using System;
-using System.Diagnostics;
+﻿/*
+---------------------------------------------------------------------------------
+--              Course Work. Part #2
+--      Name      Pashchuk Eduard Fedorovich
+--      Group     IP-22
+--      Date      16.03.2014
+--      Task	  MA = MB*MC*alpha + (E*T)*MK
+---------------------------------------------------------------------------------
+*/
 
-//MA = MB*MC*alpha + (E*T)*MK
+using System;
+using System.Diagnostics;
 
 namespace LocalMemory
 {
