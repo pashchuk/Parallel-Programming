@@ -13,8 +13,8 @@
 
 #include "data.h"
 
-#define N 8
-#define P 8
+#define N 2000
+#define P 2
 #define H N/P
 
 #define T1Input 1
@@ -133,30 +133,36 @@ void firstTask()
 	int *buffer = new int[size*size];
 	if (P > 2)
 	{
+		std::printf("Task %d. --before-- MA[%d][0] = %d\n", 0, getStart(2), MA.matrix[getStart(2)][0]);
+		std::printf("Task %d. --before-- MA[%d][0] = %d\n", 0, getEnd(P / 2+1) - 1, MA.matrix[getEnd(P / 2+1) - 1][0]);
+		std::cout.flush();
 		MPI_Recv(buffer, size*size, MPI_INT, 1, FinishResultTag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-		for (int j = getStart(2); j < getEnd(2); j++)
+		for (int j = getStart(2); j < getEnd(P/2+1); j++)
 		for (int k = 0; k < size; k++)
 			MA.matrix[j][k] = *(buffer + j*size + k);
+		std::printf("Task %d. --after-- MA[%d][0] = %d\n", 0, getStart(2), MA.matrix[getStart(2)][0]);
+		std::printf("Task %d. --after-- MA[%d][0] = %d\n", 0, getEnd(P / 2) - 1, MA.matrix[getEnd(P / 2) - 1][0]);
+		std::cout.flush();
 	}
-
-	std::cout << "8\n";
-	std::cout.flush();
-
 	MPI_Recv(&buffer[0], size*size, MPI_INT, P - 1, FinishResultTag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
-	std::cout << "8.5\n";
+	std::printf("Task %d. --before-- MA[%d][0] = %d\n", 0, 1, MA.matrix[1][0]);
+	std::printf("Task %d. --before-- MA[%d][0] = %d\n", 0, getEnd(P)-1, MA.matrix[getEnd(P)-1][0]);
 	std::cout.flush();
-
-	for (int j = getStart(P/2+1); j < getEnd(P); j++)
+	for (int j = getStart(P==2?2:P/2 + 2); j < getEnd(P); j++)
 	for (int k = 0; k < size; k++)
 		MA.matrix[j][k] = *(buffer + j*size + k);
 	delete buffer;
+	std::printf("Task %d. --after-- MA[%d][0] = %d\n", 0, 1, MA.matrix[1][0]);
+	std::printf("Task %d. --after-- MA[%d][0] = %d\n", 0, getEnd(P)-1, MA.matrix[getEnd(P)-1][0]);
+	std::cout.flush();
 
 	std::cout << "9\n";
 	std::cout.flush();
 
 	std::cout << "t1 finished\n";
-	MA.print();
+	if (N <= 10)
+		MA.print();
 }
 
 void lastTask()
@@ -229,7 +235,7 @@ void lastTask()
 	// receive ready sum result of E*T's parts
 	MPI_Recv(&ET_result, 1, MPI_INT, 0, ETResultTag, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
 	if (P > 4)
-		MPI_Send(&ET_sum, 1, MPI_INT, P - 2, ETResultTag, MPI_COMM_WORLD);
+		MPI_Send(&ET_result, 1, MPI_INT, P - 2, ETResultTag, MPI_COMM_WORLD);
 
 	for (int i = startIndex; i < endIndex; i++)
 	for (int j = 0; j < N; j++)
@@ -243,8 +249,6 @@ void lastTask()
 	}
 	//receive final result from previous node
 
-	std::cout << "Task " << P - 1 << ". ET_sum =  " << ET_sum << " MA.matrix[" << startIndex << "][0] = " << MA.matrix[startIndex][0] << "\n";
-	std::cout << "Task " << P - 1 << ". ET_sum =  " << ET_sum << " MA.matrix[" << 4 << "][0] = " << MA.matrix[4][0] << "\n";
 	std::cout.flush();
 	if (P > 4)
 	{
@@ -252,7 +256,7 @@ void lastTask()
 		std::cout.flush();
 		int *buffer = new int[size*size];
 		MPI_Recv(buffer, size*size, MPI_INT, P - 2, FinishResultTag, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
-		for (int j = getStart(P - 1); j < getEnd(P - 1); j++)
+		for (int j = getStart(P / 2 + 2); j < getEnd(P - 1); j++)
 		for (int k = 0; k < size; k++)
 			MA.matrix[j][k] = *(buffer + j*size + k);
 		delete buffer;
@@ -318,7 +322,7 @@ void otherTask(int id)
 	// receive ready sum result of E*T's parts
 	MPI_Recv(&ET_result, 1, MPI_INT, id + difference, ETResultTag, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
 	if ((id <= P / 2 - 1) || (id > P / 2 + 1))
-		MPI_Send(&ET_sum, 1, MPI_INT, id - difference, ETResultTag, MPI_COMM_WORLD);
+		MPI_Send(&ET_result, 1, MPI_INT, id - difference, ETResultTag, MPI_COMM_WORLD);
 
 
 	for (int i = startIndex; i < endIndex; i++)
@@ -331,21 +335,23 @@ void otherTask(int id)
 
 		MA.matrix[i][j] = sum + MK.matrix[i][j] * ET_result;
 	}
-	std::cout << "Task " << id << ". ET_sum =  " << ET_sum << " MA.matrix["<<startIndex<<"][0] = " << MA.matrix[startIndex][0] << "\n";
-	std::cout.flush();
 	//receive final result from previous node
 	if ((id <= P / 2 - 1) || (id > P / 2 + 1))
 	{
 		int *buffer = new int[size*size];
 		MPI_Recv(buffer, size*size, MPI_INT, id - difference, FinishResultTag, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
-		int begin = getStart(id - difference + 1), end = getEnd(id - difference + 1);
+		int begin = getStart(difference < 0 ? id - difference + 1 : P / 2 + 2), end = getEnd(difference < 0 ? P / 2 + 1 : id - difference + 1);
+		std::printf("Task %d. --before-- MA[%d][0] = %d\n", id, begin, MA.matrix[begin][0]);
+		std::printf("Task %d. --before-- MA[%d][0] = %d\n", id, end - 1, MA.matrix[end - 1][0]);
+		std::cout.flush();
 		for (int j = begin; j < end; j++)
 		for (int k = 0; k < size; k++)
 			MA.matrix[j][k] = *(buffer + j*size + k);
 		delete buffer;
+		std::printf("Task %d. --after-- MA[%d][0] = %d\n", id, begin, MA.matrix[begin][0]);
+		std::printf("Task %d. --after-- MA[%d][0] = %d\n", id, end - 1, MA.matrix[end - 1][0]);
+		std::cout.flush();
 	}
-	std::cout << "Task " << id << ". ET_sum =  " << ET_sum << " MA.matrix[" << startIndex << "][0] = " << MA.matrix[startIndex][0] << "\n";
-	std::cout.flush();
 	MPI_Send(MA.matrix[0], size*size, MPI_INT, id + difference, FinishResultTag, MPI_COMM_WORLD);
 	std::cout << "Task " << id << ". Finished!\n";
 	std::cout.flush();
