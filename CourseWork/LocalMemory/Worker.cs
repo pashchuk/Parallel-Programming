@@ -104,12 +104,13 @@ namespace LocalMemory
 
 			WaitHandle.WaitAll(_finishCalculations);
 			Console.WriteLine("Task {0,2:D} finished!!!", 1);
-			for (int i = 0; i < MA.GetLength(0); i++)
-			{
-				for (int j = 0; j < MA.GetLength(1); j++)
-					Console.Write("{0}  ", MA[i, j]);
-				Console.WriteLine();
-			}
+			if(N<=10)
+				for (int i = 0; i < MA.GetLength(0); i++)
+				{
+					for (int j = 0; j < MA.GetLength(1); j++)
+						Console.Write("{0}  ", MA[i, j]);
+					Console.WriteLine();
+				}
 
 		}
 		private void lastTask()
@@ -142,14 +143,28 @@ namespace LocalMemory
 			fill(MC);
 			fill(MK);
 			fill(E);
-			calculation(0);
+
+			int ET_sum = 0;
+			for (int i = 0; i < N; i++)
+				ET_sum += E[i] * T[i];
+			for (int i = 0; i < N; i++)
+				for (int j = 0; j < N; j++)
+				{
+					int sum = 0;
+					for (int k = 0; k < N; k++)
+						sum += MB[i, k] * MC[k, j];
+					sum *= alpha;
+
+					MA[i, j] = sum + MK[i, j] * ET_sum;
+				}
 			Console.WriteLine("Task {0,2:D} finished!!!", 1);
-			for (int i = 0; i < MA.GetLength(0); i++)
-			{
-				for (int j = 0; j < MA.GetLength(1); j++)
-					Console.Write("{0}  ", MA[i, j]);
-				Console.WriteLine();
-			}
+			if(N<=10)
+				for (int i = 0; i < MA.GetLength(0); i++)
+				{
+					for (int j = 0; j < MA.GetLength(1); j++)
+						Console.Write("{0}  ", MA[i, j]);
+					Console.WriteLine();
+				}
 
 		}
 
