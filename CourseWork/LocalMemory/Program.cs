@@ -22,7 +22,7 @@ namespace LocalMemory
 			watch.Start();
 			worker.Start().Wait();
 			watch.Stop();
-			Console.WriteLine(watch.ElapsedMilliseconds);
+			Console.WriteLine(watch.ElapsedMilliseconds/1000);
 		}
 	}
 
