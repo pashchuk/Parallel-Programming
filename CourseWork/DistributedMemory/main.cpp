@@ -13,8 +13,8 @@
 
 #include "data.h"
 
-#define N 2000
-#define P 2
+#define N 8
+#define P 1
 #define H N/P
 
 #define T1Input 1
@@ -27,22 +27,29 @@ int getEnd(int);
 void firstTask();
 void lastTask();
 void otherTask(int);
+void oneTask();
 
 int main(int argc, char* argv[])
 {
-	int rank;
-	if (P < 2) return 0;
+	int rank, count;
 	MPI_Init(&argc, &argv);
+	MPI_Comm_size(MPI_COMM_WORLD, &count);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-	if (rank == 0)
+	if (count == 1)
+		oneTask();
+	else
 	{
-		std::cout << "inside if\n";
-		firstTask();
+		if (rank == 0)
+		{
+			std::cout << "inside if\n";
+			firstTask();
+		}
+		else if (rank == P - 1) lastTask();
+		else otherTask(rank);
 	}
-	else if (rank == P - 1) lastTask();
-	else otherTask(rank);
 
 	MPI_Finalize();
+	std::cout.flush();
 	return 0;
 }
 
@@ -355,6 +362,38 @@ void otherTask(int id)
 	MPI_Send(MA.matrix[0], size*size, MPI_INT, id + difference, FinishResultTag, MPI_COMM_WORLD);
 	std::cout << "Task " << id << ". Finished!\n";
 	std::cout.flush();
+}
+
+void oneTask()
+{
+	// First task started!!!
+	int size = N, alpha;
+	Matrix MA(size), MB(size), MC(size), MK(size);
+	Vector E(size), T(size);
+	// input data
+	MB.generate();
+	MC.generate();
+	MK.generate();
+	E.generate();
+	T.generate();
+	alpha = 1;
+	
+	// calculate E*T
+	int ET_sum = 0;
+	for (int i = 0; i < size; i++)
+		ET_sum += E.vector[i] * T.vector[i];
+	// calculate MA
+	for (int i = 0; i < size; i++)
+	for (int j = 0; j < size; j++)
+	{
+		int sum = 0;
+		for (int k = 0; k < size; k++)
+			sum += MB.matrix[i][k] * MC.matrix[k][j];
+		sum *= alpha;
+		MA.matrix[i][j] = sum + MK.matrix[i][j] * ET_sum;
+	}
+	if (N <= 10)
+		MA.print();
 }
 
 int getStart(int number)
