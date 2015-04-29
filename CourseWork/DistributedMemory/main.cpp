@@ -10,11 +10,12 @@
 
 #include <mpi.h>
 #include<iostream>
+#include <ctime>
 
 #include "data.h"
 
-#define N 8
-#define P 1
+#define N 2000
+#define P 2
 #define H N/P
 
 #define T1Input 1
@@ -31,6 +32,7 @@ void oneTask();
 
 int main(int argc, char* argv[])
 {
+	clock_t tStart = clock();
 	int rank, count;
 	MPI_Init(&argc, &argv);
 	MPI_Comm_size(MPI_COMM_WORLD, &count);
@@ -47,9 +49,9 @@ int main(int argc, char* argv[])
 		else if (rank == P - 1) lastTask();
 		else otherTask(rank);
 	}
-
+	if (rank == 0)
+		std::printf("Time taken: %.2fs\n", (double)(clock() - tStart) / CLOCKS_PER_SEC);
 	MPI_Finalize();
-	std::cout.flush();
 	return 0;
 }
 
