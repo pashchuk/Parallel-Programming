@@ -11,14 +11,14 @@
 
 public class Lab6 {
 
-    private static final int N = 10;
-    private static final int P = 8;
+    private static final int N = 6;
+    private static final int P = 6;
     private static final int H = N / P;
     private static final Monitor MONITOR = new Monitor(P);
     private static final Thread[] THREADS = new Thread[P];
 
 
-    private static int[][] MA = inputMatrix();
+    private static int[][] MA = new int[N][];
     private static int[][] MB;
     private static int[][] MK;
     private static int[][] MU;
@@ -39,26 +39,24 @@ public class Lab6 {
         MONITOR.signalCount1();
         MONITOR.waitCount1();
 
-        int ai = MONITOR.copya();
         int dl = MONITOR.copyd();
-        int[] Ei = MONITOR.copyE();
-        int[][] MTi = MONITOR.copyMT();
+        int[][] MCi = MONITOR.copyMC();
+        int[][] temp = new int[N][];
+        for(int i = 0; i < N; i++)
+            temp[i] = new int[N];
 
-        int[][] MM = new int[N][N];
-        for (int i = 0; i < N; i++) {
-            for (int j = start; j < end; j++) {
-                MM[i][j] = 0;
-                for (int k = 0; k < N; k++) {
-                    MM[i][j] += MTi[i][k] * MK[k][j];
-                }
+        for(int i = start; i < end; i++)
+            for(int j = 0; j < N; j++)
+                for (int k = 0; k < N; k++)
+                    temp[j][i] += MCi[j][k] * MK[k][i];
+
+        for(int i = start; i < end; i++)
+            for(int j = 0; j < N; j++) {
+                for (int k = 0; k < N; k++)
+                    MA[j][i] += MB[j][k] * temp[k][i];
+                MA[j][i] += dl * MU[j][i];
             }
-        }
-        for (int i = start; i < end; i++) {
-            A[i] = dl * R[i];
-            for (int j = 0; j < N; j++) {
-                A[i] += + ai * Ei[i] * MM[j][i];
-            }
-        }
+
         MONITOR.signalCount2();
     }
 
@@ -78,42 +76,40 @@ public class Lab6 {
         return MA;
     }
 
-    public static void outputVector(int[] A) {
+    public static void outputMatrix(int[][] MA) {
         System.out.println("A:");
-        for (int a : A) {
-            System.out.print(String.format("%6s", a));
+        for (int[] line : MA) {
+            for(int x : line) {
+                System.out.print(String.format("%6s", x));
+            }
+            System.out.println();
         }
     }
 
-    public static void input(int number) {
-        if (number == 1) {
-            B = inputVector();
-            MK = inputMatrix();
-            MONITOR.signalInput();
-        } else if (number == 3) {
-            C = inputVector();
-            MONITOR.writeMT(inputMatrix());
-            MONITOR.signalInput();
-        } else if (number == 6) {
-            R = inputVector();
-            MONITOR.writea(1);
-            MONITOR.writeE(inputVector());
-            MONITOR.signalInput();
-        }
+    public static void input() {
+        for(int i = 0; i < N; i++)
+            MA[i] = new int[N];
+        MONITOR.writeMC(inputMatrix());
+        MB = inputMatrix();
+        MK = inputMatrix();
+        MU = inputMatrix();
+        B = inputVector();
+        R = inputVector();
+        MONITOR.signalInput();
     }
 
-    public static void output(int number) {
-        if (number == 1) {
-            MONITOR.waitCount2();
-            outputVector(A);
-        }
+    public static void output() {
+        MONITOR.waitCount2();
+        outputMatrix(MA);
     }
 
     public static void perform(int number) {
         System.out.println(String.format("Thread%s started!!!", number));
-        input(number);
+        if(number==6)
+            input();
         calculate(number);
-        output(number);
+        if(number==6)
+            output();
         System.out.println(String.format("Thread%s finished!!!", number));
     }
 

@@ -6,20 +6,12 @@ public class Monitor {
 	private int d = 0;
 	private int[] E;
 	private int[][] MC;
-    private int flagInput;
+    private boolean flagInput;
     private int flagCount1;
     private int flagCount2;
 
     public Monitor(int threadCount){
         this.P = threadCount;
-    }
-
-    public synchronized void writea(int a) {
-        this.a = a;
-    }
-
-    public synchronized int copya() {
-        return a;
     }
 
     public synchronized void writed(int di) {
@@ -30,25 +22,17 @@ public class Monitor {
         return d;
     }
 
-    public synchronized void writeE(int[] E) {
-        this.E = E;
+    public synchronized void writeMC(int[][] MC) {
+        this.MC = MC;
     }
 
-    public synchronized int[] copyE() {
-        return Arrays.copyOf(E, E.length);
-    }
-
-    public synchronized void writeMT(int[][] MT) {
-        this.MT = MT;
-    }
-
-    public synchronized int[][] copyMT() {
-        return Arrays.copyOf(MT, MT.length);
+    public synchronized int[][] copyMC() {
+        return Arrays.copyOf(MC, MC.length);
     }
 
     public synchronized void signalInput() {
-        if(++flagInput == 1)
-            notifyAll();
+        flagInput = true;
+        notifyAll();
     }
 
     public synchronized void signalCount1() {
@@ -62,7 +46,7 @@ public class Monitor {
     }
 
     public synchronized void waitInput() {
-        while (flagInput != 1) {
+        while (!flagInput) {
             try {
                 wait();
             } catch (InterruptedException ignored) {
@@ -71,7 +55,7 @@ public class Monitor {
     }
 
     public synchronized void waitCount1() {
-        while (flagCount1 != 8) {
+        while (flagCount1 != P) {
             try {
                 wait();
             } catch (InterruptedException ignored) {
@@ -80,7 +64,7 @@ public class Monitor {
     }
 
     public synchronized void waitCount2() {
-        while (flagCount2 != 8) {
+        while (flagCount2 != P) {
             try {
                 wait();
             } catch (InterruptedException ignored) {
