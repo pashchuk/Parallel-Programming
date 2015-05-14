@@ -3,7 +3,6 @@
  -- Lab6                            --
  -- Pashchuk Eduard Fedorovich      --
  -- Group IP-22                     --
- -- A =(B*C)*R + a*E*(MT*MK)        --
  -- MA = MB*(MC*MK)+(B*R)*MU        --
  -- Data : 14.05.2015               --
  -------------------------------------
