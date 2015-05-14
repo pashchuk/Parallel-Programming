@@ -2,10 +2,9 @@ import java.util.Arrays;
 
 public class Monitor {
     private int P;
-	private int a;
 	private int d = 0;
-	private int[] E;
 	private int[][] MC;
+    private int[][] MB;
     private boolean flagInput;
     private int flagCount1;
     private int flagCount2;
@@ -28,6 +27,14 @@ public class Monitor {
 
     public synchronized int[][] copyMC() {
         return Arrays.copyOf(MC, MC.length);
+    }
+
+    public synchronized void writeMB(int[][] MB) {
+        this.MB = MB;
+    }
+
+    public synchronized int[][] copyMB() {
+        return Arrays.copyOf(MB, MB.length);
     }
 
     public synchronized void signalInput() {

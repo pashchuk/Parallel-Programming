@@ -18,7 +18,6 @@ public class Lab6 {
 
 
     private static int[][] MA = new int[N][];
-    private static int[][] MB;
     private static int[][] MK;
     private static int[][] MU;
     private static int[] B;
@@ -40,6 +39,7 @@ public class Lab6 {
 
         int dl = MONITOR.copyd();
         int[][] MCi = MONITOR.copyMC();
+        int[][] MB = MONITOR.copyMB();
         int[][] temp = new int[N][];
         for(int i = 0; i < N; i++)
             temp[i] = new int[N];
@@ -76,7 +76,7 @@ public class Lab6 {
     }
 
     public static void outputMatrix(int[][] MA) {
-        System.out.println("A:");
+        System.out.println("MA:");
         for (int[] line : MA) {
             for(int x : line) {
                 System.out.print(String.format("%6s", x));
@@ -89,7 +89,7 @@ public class Lab6 {
         for(int i = 0; i < N; i++)
             MA[i] = new int[N];
         MONITOR.writeMC(inputMatrix());
-        MB = inputMatrix();
+        MONITOR.writeMB(inputMatrix());
         MK = inputMatrix();
         MU = inputMatrix();
         B = inputVector();
