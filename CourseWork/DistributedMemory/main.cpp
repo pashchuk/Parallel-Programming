@@ -17,6 +17,7 @@
 #define N 2000
 #define P 20
 #define H N/P
+#define mid P/2
 
 #define T1Input 1
 #define TpInput 2
@@ -221,7 +222,7 @@ void otherTask(int id)
 {
 	std::cout << "Task " << id + 1 << ". Started!\n";
 	std::cout.flush();
-	int size = N, alpha, ET_result, difference = id <= P / 2 ? -1 : 1;
+	int size = N, alpha, ET_result, difference = id <= mid ? -1 : 1;
 	Matrix MA(N), MB(N), MC(N), MK(N);
 	Vector E(N), T(N);
 
@@ -249,7 +250,7 @@ void otherTask(int id)
 		ET_sum += E.vector[i] * T.vector[i];
 
 	// receive result of E*T from previous node
-	if ((id <= P / 2 - 1) || (id > P / 2 + 1))
+	if ((id <= mid - 1) || (id > mid + 1))
 	{
 		int tempETSum = 0;
 		MPI_Recv(&tempETSum, 1, MPI_INT, id - difference, ETResultTag, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
@@ -260,7 +261,7 @@ void otherTask(int id)
 
 	// receive ready sum result of E*T's parts
 	MPI_Recv(&ET_result, 1, MPI_INT, id + difference, ETResultTag, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
-	if ((id <= P / 2 - 1) || (id > P / 2 + 1))
+	if ((id <= mid - 1) || (id > mid + 1))
 		MPI_Send(&ET_result, 1, MPI_INT, id - difference, ETResultTag, MPI_COMM_WORLD);
 
 
@@ -275,11 +276,11 @@ void otherTask(int id)
 		MA.matrix[i][j] = sum + MK.matrix[i][j] * ET_result;
 	}
 	//receive final result from previous node
-	if ((id <= P / 2 - 1) || (id > P / 2 + 1))
+	if ((id <= mid - 1) || (id > mid + 1))
 	{
 		int *buffer = new int[size*size];
 		MPI_Recv(buffer, size*size, MPI_INT, id - difference, FinishResultTag, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
-		int begin = getStart(difference < 0 ? id - difference + 1 : P / 2 + 2), end = getEnd(difference < 0 ? P / 2 + 1 : id - difference + 1);
+		int begin = getStart(difference < 0 ? id - difference + 1 : mid + 2), end = getEnd(difference < 0 ? mid + 1 : id - difference + 1);
 		for (int j = begin; j < end; j++)
 		for (int k = 0; k < size; k++)
 			MA.matrix[j][k] = *(buffer + j*size + k);
