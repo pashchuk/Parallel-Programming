@@ -6,8 +6,8 @@ namespace LocalMemory
 {
 	public class Worker
 	{
-		public const int N = 10;
-		public const int P = 3;
+		public const int N = 1300;
+		public const int P = 1;
 		public const int H = N / P;
 
 		private int _processCount;

@@ -14,8 +14,8 @@
 
 #include "data.h"
 
-#define N 2000
-#define P 20
+#define N 1300
+#define P 1
 #define H N/P
 #define mid P/2
 
@@ -183,7 +183,7 @@ void lastTask()
 		MPI_Recv(&tempETSum, 1, MPI_INT, P - 2, ETResultTag, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
 		ET_sum += tempETSum;
 	}
-	// send result of E*T to the next node
+	// send result of E*T to the T1
 	MPI_Send(&ET_sum, 1, MPI_INT, 0, ETResultTag, MPI_COMM_WORLD);
 
 	// receive ready sum result of E*T's parts
@@ -235,7 +235,7 @@ void otherTask(int id)
 	MPI_Recv(&alpha, 1, MPI_INT, id + difference, TpInput, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
 
 	//send data to the next thread 
-	if ((id <= P / 2 - 1) || (id > P / 2 + 1))
+	if ((id <= mid - 1) || (id > mid + 1))
 	{
 		MPI_Send(MB.matrix[0], size*size, MPI_INT, id - difference, T1Input, MPI_COMM_WORLD);
 		MPI_Send(T.vector, size, MPI_INT, id - difference, T1Input, MPI_COMM_WORLD);
