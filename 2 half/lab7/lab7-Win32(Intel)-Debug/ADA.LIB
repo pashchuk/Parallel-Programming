@@ -1,0 +1,11 @@
+NOSUFFIX: True
+ILSUB: il
+XILSUB: xil
+OBJSUB: obj
+INFSUB: info
+XREFSUB: xref
+MSGSUB: msg
+ELTABSUB: elabinfo
+PATH
+  PATHNAME: c:\program files (x86)\aonix\objectada\lib\rts
+ENDPATH
