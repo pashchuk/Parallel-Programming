@@ -12,51 +12,24 @@ public:
 
 	void generate(int);
 
-	int getElement(int);
-
-	void setElement(int, int);
-
-	int operator*(Vector&);
-
 	void print();
-
-	Vector* operator+(Vector &);
-
-	Vector* sort();
-
-	int getSize();
 };
 
 class Matrix {
 private:
-	int size;
+	const int rows, columns;
 
 public:
 	int **matrix;
-	Matrix(int);
+	Matrix(int size);
+	Matrix(int rows, int columns);
 
 	~Matrix();
 
 	void generate(int);
 
-	Matrix* operator*(Matrix&);
-
 	void print();
 
-	Matrix* operator+(Matrix&);
-
-	Matrix* sort();
-
-	Matrix* transpose();
-
-	int getSize();
-
-	int getElement(int line, int column);
-
-	void setElement(int line, int column, int value);
 };
-
-Vector* operator*(Matrix &, Vector &);
-Vector* operator*(Vector &, Matrix &);
 
 #endif // __DATA_H_
