@@ -7,7 +7,7 @@ Matrix::Matrix(int rows, int columns): rows(rows), columns(columns)
 	matrix = new int*[rows];
 	int *alloc = new int[rows*columns];
 	for (int i = 0; i < rows; i++)
-		matrix[i] = &(alloc[columns*i]);
+		matrix[i] = (alloc + columns*i);
 }
 Matrix::Matrix(int size) : Matrix(size,size) { }
 
