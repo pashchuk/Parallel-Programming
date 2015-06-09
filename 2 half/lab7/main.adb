@@ -209,15 +209,15 @@ with Ada.Text_IO, Ada.Integer_Text_IO, Ada.Calendar;
                B3h := B;
                MK3h := MK;
             end DataInput2;
-                    Bh := B3h(H+1..2*H);
-                    MKh := MK3h(H+1..2*H);
+                    Bh := B3h(1..H);
+                    MKh := MK3h(1..H);
 		  elsif Tid = 5 Then 
             accept DataInput2(B: in Vector; MK: in Matrix) do
                B2h := B;
                MK2h := MK;
             end DataInput2;
-					Bh := B2h(H+1..2*H);
-                    MKh := MK2h(H+1..2*H);
+					Bh := B2h(1..H);
+                    MKh := MK2h(1..H);
           elsif Tid = 6 Then 
             accept DataInput2(B: in Vector; MK: in Matrix) do
                Bh := B;
@@ -232,7 +232,7 @@ with Ada.Text_IO, Ada.Integer_Text_IO, Ada.Calendar;
                     MKh := MK7h(6*H+1..7*H);
 		  elsif Tid = 8 Then
 		  	VectorInput(Bn);
-			MatrixInput(MKn); 
+			MatrixInput(MKn);
                     Bh := Bn(7*h+1..8*H);
 					MKh := MKn(7*h+1..8*H);
           end if;
@@ -260,8 +260,6 @@ with Ada.Text_IO, Ada.Integer_Text_IO, Ada.Calendar;
 		 -----------------------------------------------------------
 
          Calculate(alpha, Bh, Cn, MOn, mKh, Ah);
-
-		 Put_Line("task" & Integer'Image(Tid) & " after calc!!!");
    
          if Tid = 1 then
             tasksArray(2).Result_A(Ah);
@@ -298,7 +296,7 @@ with Ada.Text_IO, Ada.Integer_Text_IO, Ada.Calendar;
 		elsif Tid = 7 then
             A7h(6*h+1..7*h) := Ah;
             accept Result_A(A: in Vector) do
-               A6h(1..6*H) := A;
+               A7h(1..6*H) := A;
             end Result_A;
             tasksArray(8).Result_A(A7h);
 		elsif Tid = 8 then
